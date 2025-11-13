@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { Todo } from "../types/types";
 import TodoListItem from "./TodoListItem";
 
