@@ -3,30 +3,21 @@ import { useEffect, useState } from "react";
 import type { Todo, MetaResponse, TodoInfo, TodoRequest } from "./types/types";
 import TodoList from "./components/TodoList";
 
-const BASE_URL = "https://easydev.club/api/v1";
+export type Filter = "all" | "inWork" | "completed";
+
+export const BASE_URL = "https://easydev.club/api/v1";
+
 
 function App() {
   const [data, setData] = useState<Todo[]>([]);
+  const [info, setInfo] = useState<TodoInfo>({
+  all: 0,
+  completed: 0,
+  inWork: 0
+});
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const changeHadler = async (id: number, updatedData: Partial<Todo>) => {
-    const response = await fetch(`${BASE_URL}/todos/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedData),
-    });
-
-    if (!response.ok) {
-      const message = await response.text();
-      throw new Error(`Ошибка ${response.status}: ${message}`);
-    }
-
-    const result: Todo = await response.json();
-    console.log(result);
-    setData((data) => data.map((todo) => (todo.id === id ? result : todo)));
-  };
+   const [filter, setFilter] = useState<Filter>("all");
 
   async function createNewTodo(newTodo: TodoRequest): Promise<void> {
     const response = await fetch(`${BASE_URL}/todos`, {
@@ -67,11 +58,46 @@ function App() {
     else return true;
   };
 
+  const fetchFilter = (status: Filter) => {
+    fetch(`${BASE_URL}/todos?filter=${status}`)
+          .then((response) => response.json())
+          .then((dataAPI: MetaResponse<Todo, TodoInfo>) => {
+            setData(dataAPI.data);
+            if (dataAPI.info) {
+            setInfo(dataAPI.info);
+            }
+          })
+          .catch((e) => console.error(e))
+  }
+
+   const changeHadler = async (id: number, updatedData: Partial<Todo>) => {
+    const response = await fetch(`${BASE_URL}/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(`Ошибка ${response.status}: ${message}`);
+    }
+
+    const result: Todo = await response.json();
+    console.log(result);
+    setData((data) => data.map((todo) => (todo.id === id ? result : todo)));
+     fetchFilter(filter)
+  };
+
   useEffect(() => {
     fetch(`${BASE_URL}/todos`)
       .then((response) => response.json())
       .then((dataAPI: MetaResponse<Todo, TodoInfo>) => {
         setData(dataAPI.data);
+         if (dataAPI.info) {
+        setInfo(dataAPI.info);
+        }
         console.log("Fetched todos:", data);
       })
       .catch((e) => console.error(e))
@@ -89,12 +115,17 @@ function App() {
             setInputValue={setInputValue}
             createNewTodo={createNewTodo}
             todos={data}
+           
           ></CreateTodo>
           <TodoList
+            fetchFilter={fetchFilter}
             valitateTitle={valitateTitle}
             changeHadler={changeHadler}
             deleteTodo={deleteTodo}
             todos={data}
+            info={info}
+            setFilter={setFilter}
+            filter={filter}
           ></TodoList>
         </>
       ) : (

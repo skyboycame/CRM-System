@@ -1,14 +1,19 @@
-import { useState } from "react";
-import type { Todo } from "../types/types";
+import {useEffect} from "react";
+import type { Todo, TodoInfo } from "../types/types";
 import TodoListItem from "./TodoListItem";
+import type { Filter } from "../App";
 
-type Filter = "all" | "inWork" | "done";
+
 
 interface TodoListProps {
   todos: Todo[];
   deleteTodo: (id: number) => Promise<void>;
   changeHadler: (id: number, updatedData: Partial<Todo>) => void;
   valitateTitle: (title: string) => boolean;
+  fetchFilter: (status: Filter) => void
+  info: TodoInfo
+  setFilter: React.Dispatch<React.SetStateAction<Filter>>
+  filter: Filter
 }
 
 const TodoList = ({
@@ -16,8 +21,14 @@ const TodoList = ({
   todos,
   deleteTodo,
   changeHadler,
+  fetchFilter,
+  info,
+  setFilter,
+  filter
 }: TodoListProps) => {
-  const [filter, setFilter] = useState<Filter>("all");
+
+ 
+  
 
   const allHandler = () => {
     setFilter("all");
@@ -28,34 +39,31 @@ const TodoList = ({
   };
 
   const DoneHandler = () => {
-    setFilter("done");
+    setFilter("completed");
   };
+
+
+  useEffect(() => {
+    fetchFilter(filter)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter])
+  
+  
 
   return (
     <>
       <div className="todo__buttons-container">
-        <button onClick={allHandler}>Все {`(${todos.length})`}</button>
+        <button onClick={allHandler}>Все {`(${info.all})`}</button>
         <button onClick={InWorkHandler}>
-          В работе {`(${todos.filter((todo) => todo.isDone === false).length})`}
+          В работе {`(${info.inWork})`}
         </button>
         <button onClick={DoneHandler}>
-          Выполнено {`(${todos.filter((todo) => todo.isDone === true).length})`}
+          Выполнено {`(${info.completed})`}
         </button>
       </div>
 
       <ul className="todo__list">
         {todos
-          .filter((todo) => {
-            if (filter === "all") {
-              return true;
-            }
-            if (filter === "inWork") {
-              return todo.isDone === false;
-            }
-            if (filter === "done") {
-              return todo.isDone === true;
-            }
-          })
           .sort(
             (a, b) =>
               new Date(b.created).getTime() - new Date(a.created).getTime()

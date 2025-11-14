@@ -31,12 +31,14 @@ const TodoListItem = ({
       alert("Название должно быть больше 2 и меньше 64 символов");
       return;
     }
+    
     changeHadler(id, { title: editValue });
     setIsEdit(!isEdit);
   };
 
   const CancelEditHandler = () => {
     setIsEdit(!isEdit);
+    setEditValue(title)
   };
 
   const OkEditHandlerEnter = (e: React.KeyboardEvent) => {
