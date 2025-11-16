@@ -1,12 +1,15 @@
 import React from "react";
 import type { Todo, TodoRequest } from "../../types/types";
 import type { SetStateAction } from "react";
+
+
 interface TodoProps {
   todos: Todo[];
   createNewTodo: (newTodo: TodoRequest) => Promise<void>;
   inputValue: string;
   setInputValue: React.Dispatch<SetStateAction<string>>;
   valitateTitle: (title: string) => boolean;
+  
 }
 
 const CreateTodo = ({
