@@ -1,54 +1,58 @@
 import React, { useState } from "react";
-import type { Todo } from "../types/types";
+import type { Todo, TodoInfo } from "../types/types";
+import { deleteTodo, changeHadler } from "../api";
+import type { Filter } from "../types/types";
+import { validateTitle } from "../utils/validation/validateTitle";
 
 interface TodoListItemProps {
-  deleteTodo: (id: number) => Promise<void>;
-  id: number;
   title: string;
   isDone: boolean;
   created: string;
-  changeHadler: (id: number, updatedData: Partial<Todo>) => void;
-  valitateTitle: (title: string) => boolean;
+  id: number
+  setData: React.Dispatch<React.SetStateAction<Todo[]>>,
+  setInfo: React.Dispatch<React.SetStateAction<TodoInfo>>
+  filter: Filter
 }
 
 const TodoListItem = ({
-  valitateTitle,
-  deleteTodo,
+  setData,
   id,
   title,
   isDone,
-  changeHadler,
+  setInfo,
+  filter
+  
 }: TodoListItemProps) => {
   const [editValue, setEditValue] = useState(title);
   const [isEdit, setIsEdit] = useState(false);
 
-  const editHandler = () => {
+  const handleEditButton = () => {
     setIsEdit(!isEdit);
   };
 
-  const OkEditHandler = (id: number) => {
-    if (!valitateTitle(editValue)) {
+  const handleOkEditButton = (id: number) => {
+    if (!validateTitle(editValue)) {
       alert("Название должно быть больше 2 и меньше 64 символов");
       return;
     }
     
-    changeHadler(id, { title: editValue });
+    changeHadler(id, { title: editValue },filter,setData, setInfo);
     setIsEdit(!isEdit);
   };
 
-  const CancelEditHandler = () => {
+  const handleCancelButton = () => {
     setIsEdit(!isEdit);
     setEditValue(title)
   };
 
-  const OkEditHandlerEnter = (e: React.KeyboardEvent) => {
+  const handleOkEditButtonEnter = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      OkEditHandler(id);
+      handleOkEditButton(id);
     }
   };
 
-  const deleteHandler = (id: number) => {
-    deleteTodo(id);
+  const handleDeleteButton = (id: number) => {
+    deleteTodo(id, setData);
   };
 
   return (
@@ -59,12 +63,12 @@ const TodoListItem = ({
             <input
               className="todo__input"
               type="checkbox"
-              onChange={() => changeHadler(id, { isDone: !isDone })}
+              onChange={() => changeHadler(id, { isDone: !isDone },filter,setData, setInfo)}
               checked={isDone}
             />
             <h3 className="todo__title">{editValue}</h3>
             <button
-              onClick={() => editHandler()}
+              onClick={() => handleEditButton()}
               className="todo__button-edit"
               aria-label="edit"
             >
@@ -72,7 +76,7 @@ const TodoListItem = ({
             </button>
             <button
               className="todo__button-delete"
-              onClick={() => deleteHandler(id)}
+              onClick={() => handleDeleteButton(id)}
               aria-label="delete"
             >
               delete
@@ -81,15 +85,15 @@ const TodoListItem = ({
         ) : (
           <>
             <input
-              onKeyDown={(e: React.KeyboardEvent) => OkEditHandlerEnter(e)}
+              onKeyDown={(e: React.KeyboardEvent) => handleOkEditButtonEnter(e)}
               placeholder="Edit Your Todo Name..."
               onChange={(e) => setEditValue(e.target.value)}
               type="text"
               className="todo__title"
               value={editValue}
             />
-            <button onClick={() => OkEditHandler(id)}>OK</button>
-            <button onClick={() => CancelEditHandler()}>Отмена</button>
+            <button onClick={() => handleOkEditButton(id)}>OK</button>
+            <button onClick={() => handleCancelButton()}>Отмена</button>
           </>
         )}
         <div className="todo__buttons"></div>

@@ -1,20 +1,19 @@
 import React from "react";
-import type { Todo, TodoRequest } from "../../types/types";
+import type { Todo} from "../../types/types";
 import type { SetStateAction } from "react";
+import { createNewTodo } from "../../api";
+import { validateTitle } from "../../utils/validation/validateTitle";
 
 
 interface TodoProps {
   todos: Todo[];
-  createNewTodo: (newTodo: TodoRequest) => Promise<void>;
   inputValue: string;
   setInputValue: React.Dispatch<SetStateAction<string>>;
-  valitateTitle: (title: string) => boolean;
-  
+  setData: React.Dispatch<React.SetStateAction<Todo[]>>
 }
 
 const CreateTodo = ({
-  valitateTitle,
-  createNewTodo,
+  setData,
   inputValue,
   setInputValue,
 }: TodoProps) => {
@@ -23,11 +22,11 @@ const CreateTodo = ({
   };
 
   const buttonHandler = () => {
-    if (!valitateTitle(inputValue)) {
+    if (!validateTitle(inputValue)) {
       alert("Название должно быть больше 2 и меньше 64 символов");
       return;
     }
-    createNewTodo({ title: inputValue, isDone: false });
+    createNewTodo({ title: inputValue, isDone: false }, setData);
     setInputValue("");
   };
 

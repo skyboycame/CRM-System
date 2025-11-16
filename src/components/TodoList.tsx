@@ -1,50 +1,49 @@
 import {useEffect} from "react";
 import type { Todo, TodoInfo } from "../types/types";
 import TodoListItem from "./TodoListItem";
-import type { Filter } from "../App";
+import type { Filter } from "../types/types";
+import { fetchData } from "../api";
 
 
 
 interface TodoListProps {
   todos: Todo[];
-  deleteTodo: (id: number) => Promise<void>;
-  changeHadler: (id: number, updatedData: Partial<Todo>) => void;
-  valitateTitle: (title: string) => boolean;
-  fetchFilter: (status: Filter) => void
   info: TodoInfo
-  setFilter: React.Dispatch<React.SetStateAction<Filter>>
-  filter: Filter
+  setData: React.Dispatch<React.SetStateAction<Todo[]>>,
+  setInfo: React.Dispatch<React.SetStateAction<TodoInfo>>
+  setFilter: React.Dispatch<React.SetStateAction<Filter>>,
+  setIsLoading:  React.Dispatch<React.SetStateAction<boolean>>
+  filter: Filter,
 }
 
 const TodoList = ({
-  valitateTitle,
   todos,
-  deleteTodo,
-  changeHadler,
-  fetchFilter,
   info,
+  setData,
+  setInfo,
   setFilter,
-  filter
+  filter,
+  setIsLoading
 }: TodoListProps) => {
 
  
   
 
-  const allHandler = () => {
+  const handleFilterAll = () => {
     setFilter("all");
   };
 
-  const InWorkHandler = () => {
+  const handleFilterInWork = () => {
     setFilter("inWork");
   };
 
-  const DoneHandler = () => {
+  const handleFilterCompleted = () => {
     setFilter("completed");
   };
 
 
   useEffect(() => {
-    fetchFilter(filter)
+    fetchData(setData,setInfo,setIsLoading,filter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter])
   
@@ -53,11 +52,11 @@ const TodoList = ({
   return (
     <>
       <div className="todo__buttons-container">
-        <button onClick={allHandler}>Все {`(${info.all})`}</button>
-        <button onClick={InWorkHandler}>
+        <button onClick={handleFilterAll}>Все {`(${info.all})`}</button>
+        <button onClick={handleFilterInWork}>
           В работе {`(${info.inWork})`}
         </button>
-        <button onClick={DoneHandler}>
+        <button onClick={handleFilterCompleted}>
           Выполнено {`(${info.completed})`}
         </button>
       </div>
@@ -70,11 +69,11 @@ const TodoList = ({
           )
           .map((todo) => (
             <TodoListItem
-              key={todo.id}
-              deleteTodo={deleteTodo}
+              key={todo.id} 
               {...todo}
-              changeHadler={changeHadler}
-              valitateTitle={valitateTitle}
+              setData={setData}
+              setInfo={setInfo}
+              filter={filter}
             ></TodoListItem>
           ))}
       </ul>
