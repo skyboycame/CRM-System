@@ -1,79 +1,65 @@
-import {useEffect} from "react";
-import type { Todo, TodoInfo } from "../types/types";
+import { useEffect } from "react";
+import { todoInfoFilterEnum, type Todo, type TodoInfo } from "../types/types";
 import TodoListItem from "./TodoListItem";
-import type { Filter } from "../types/types";
-import { fetchData } from "../api";
+import { getTodos } from "../api";
 
-
-
-interface TodoListProps {
+interface props {
   todos: Todo[];
-  info: TodoInfo
-  setData: React.Dispatch<React.SetStateAction<Todo[]>>,
-  setInfo: React.Dispatch<React.SetStateAction<TodoInfo>>
-  setFilter: React.Dispatch<React.SetStateAction<Filter>>,
-  setIsLoading:  React.Dispatch<React.SetStateAction<boolean>>
-  filter: Filter,
+  info: TodoInfo;
+  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  setInfo: React.Dispatch<React.SetStateAction<TodoInfo>>;
+  setTodoFilter: React.Dispatch<React.SetStateAction<todoInfoFilterEnum>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  todoFilter: todoInfoFilterEnum;
 }
 
 const TodoList = ({
   todos,
   info,
-  setData,
+  setTodos,
   setInfo,
-  setFilter,
-  filter,
-  setIsLoading
-}: TodoListProps) => {
+  setTodoFilter,
+  todoFilter,
+}: props) => {
 
- 
-  
+  const handleFilter = (filter: todoInfoFilterEnum) => {
+    setTodoFilter(filter)
+  }
 
-  const handleFilterAll = () => {
-    setFilter("all");
-  };
-
-  const handleFilterInWork = () => {
-    setFilter("inWork");
-  };
-
-  const handleFilterCompleted = () => {
-    setFilter("completed");
-  };
-
-
-  useEffect(() => {
-    fetchData(setData,setInfo,setIsLoading,filter)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter])
-  
-  
+  useEffect( () => {
+   getTodos(todoFilter)
+         .then(todos => {
+           if(todos && todos.info) {
+             setTodos(todos.data)
+             setInfo(todos.info)
+           }
+         })
+       
+  },[todoFilter, setTodos, setInfo]);
 
   return (
     <>
       <div className="todo__buttons-container">
-        <button onClick={handleFilterAll}>Все {`(${info.all})`}</button>
-        <button onClick={handleFilterInWork}>
-          В работе {`(${info.inWork})`}
+        <button onClick={() => handleFilter(todoInfoFilterEnum.all)}>All {`(${info.all})`}</button>
+        <button onClick={() => handleFilter(todoInfoFilterEnum.inWork)}>
+          inWork {`(${info.inWork})`}
         </button>
-        <button onClick={handleFilterCompleted}>
-          Выполнено {`(${info.completed})`}
+        <button onClick={() => handleFilter(todoInfoFilterEnum.completed)}>
+          Completed {`(${info.completed})`}
         </button>
       </div>
 
       <ul className="todo__list">
         {todos
-          .sort(
-            (a, b) =>
-              new Date(b.created).getTime() - new Date(a.created).getTime()
-          )
           .map((todo) => (
             <TodoListItem
-              key={todo.id} 
-              {...todo}
-              setData={setData}
+              key={todo.id}
+              id={todo.id}
+              isDone={todo.isDone}
+              title={todo.title}
+              setTodos={setTodos}
               setInfo={setInfo}
-              filter={filter}
+              todoFilter={todoFilter}
             ></TodoListItem>
           ))}
       </ul>

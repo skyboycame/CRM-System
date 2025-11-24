@@ -1,5 +1,5 @@
 
-import Page from "./components/layout/Page";
+import TodosPage from "./pages/TodosPage";
 
 
 
@@ -8,8 +8,7 @@ function App() {
 
   return (
     <>
-    <Page></Page>
-    
+    <TodosPage></TodosPage>
     </>
   );
 }

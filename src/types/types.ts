@@ -1,2 +1,1 @@
-export * from './apiTypes/apiTypes'
-export * from './anotherTypes'
+export * from './todosTypes/todos'
