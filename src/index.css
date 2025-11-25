@@ -223,3 +223,7 @@ button:hover {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+
+.todo__filter-btn--active {
+   background-color: var(--primary-hover);
+}

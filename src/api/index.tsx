@@ -43,11 +43,13 @@ export const getTodos = async (
   status?: todoInfoFilterEnum,
 ): Promise<MetaResponse<Todo, TodoInfo> | undefined> => {
   try {
-    let TODO_URL: string
+    let TODO_URL = ''
       if (status) {
         TODO_URL = `${BASE_URL}/todos?filter=${status}`;
+        console.log(TODO_URL)
       } else {
         TODO_URL = `${BASE_URL}/todos`;
+        console.log(TODO_URL)
       }
 
       const response = await fetch(TODO_URL)
