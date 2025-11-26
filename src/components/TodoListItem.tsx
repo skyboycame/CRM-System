@@ -34,28 +34,36 @@ const TodoListItem = ({
       return;
     }
 
-    updateTodo(id, { title: editValue }).then((result) => {
-      setTodos((data) => data.map((todo) => (todo.id === id ? result : todo)));
-
-      getTodos(todoFilter).then((todos) => {
+    updateTodo(id, { title: editValue })
+      .then((result) => {
+        setTodos((data) =>
+          data.map((todo) => (todo.id === id ? result : todo))
+        );
+        return getTodos(todoFilter);
+      })
+      .then((todos) => {
         if (todos && todos.info) {
           setTodos(todos.data);
           setInfo(todos.info);
         }
       });
-    });
     setIsEdit(!isEdit);
   };
 
   const checkboxCheckedChange = () => {
-    updateTodo(id, { isDone: !isDone }).then((result) => {
-      setTodos((data) => data.map((todo) => (todo.id === id ? result : todo)));
-      getTodos(todoFilter).then((todos) => {
+    updateTodo(id, { isDone: !isDone })
+      .then((result) => {
+        setTodos((data) =>
+          data.map((todo) => (todo.id === id ? result : todo))
+        );
+        return getTodos(todoFilter);
+      })
+      .then((todos) => {
         if (todos && todos.info) {
-          setInfo(todos.info);
+          setInfo(todos.info)
+          setTodos(todos.data);
         }
       });
-    });
   };
 
   const handleCancelButton = () => {
@@ -64,8 +72,17 @@ const TodoListItem = ({
   };
 
   const handleDeleteButton = () => {
-    deleteTodo(id);
-    setTodos((data) => data.filter((todo) => todo.id !== id));
+    deleteTodo(id)
+      .then(() => {
+        setTodos((data) => data.filter((todo) => todo.id !== id));
+        return getTodos(todoFilter);
+      })
+      .then((todos) => {
+        if (todos && todos.info) {
+          setTodos(todos.data);
+          setInfo(todos.info);
+        }
+      });
   };
 
   return (
@@ -169,16 +186,10 @@ const TodoListItem = ({
               className="todo__title"
               value={editValue}
             />
-            <button
-              className="button__input"
-              onClick={handleOkEditButton}
-            >
+            <button className="button__input" onClick={handleOkEditButton}>
               Ok
             </button>
-            <button
-              className="button__input"
-              onClick={handleCancelButton}
-            >
+            <button className="button__input" onClick={handleCancelButton}>
               Cancel
             </button>
           </>

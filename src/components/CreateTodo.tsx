@@ -1,17 +1,22 @@
 import React from "react";
-import type { Todo} from "../types/types";
+import { todoInfoFilterEnum, type Todo, type TodoInfo} from "../types/types";
 import type { SetStateAction } from "react";
-import { createNewTodo } from "../api";
+import { createNewTodo, getTodos } from "../api";
 import { validateTitle } from "../utils/validation/validateTitle";
 
 
+
 interface props {
+  setInfo: React.Dispatch<React.SetStateAction<TodoInfo>>;
+  todoFilter: todoInfoFilterEnum;
   todoTitleValue: string;
   setTodoTitleValue: React.Dispatch<SetStateAction<string>>;
   setTodos: React.Dispatch<React.SetStateAction<Todo[]>>
 }
 
 const CreateTodo = ({
+  setInfo,
+  todoFilter,
   setTodos,
   todoTitleValue,
   setTodoTitleValue,
@@ -28,11 +33,17 @@ const CreateTodo = ({
       return;
     }
     createNewTodo({ title: todoTitleValue, isDone: false })
-    .then(newTodo => setTodos((todos) => [...todos, newTodo]));
-    setTodoTitleValue("");
-  };
+    .then(newTodo => {
+      setTodos((todos) => [...todos, newTodo])
+      return getTodos(todoFilter)
+    })
+    .then(todos => {
+      if (todos && todos.info) {
+            setInfo(todos.info);
+          }
+           setTodoTitleValue("");
 
-
+    })};
   
 
   return (

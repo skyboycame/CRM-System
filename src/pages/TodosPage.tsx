@@ -33,6 +33,8 @@ const TodosPage = () => {
       {!isLoading ? (
         <>
           <CreateTodo
+            setInfo={setInfo}
+            todoFilter={todoFilter}
             todoTitleValue={todoTitleValue}
             setTodoTitleValue={setTodoTitleValue}
             setTodos={setTodos}
