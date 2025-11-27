@@ -29,7 +29,7 @@ const CreateTodo = ({
   const createAndValidateTodo = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!validateTitle(todoTitleValue)) {
-      alert("Название должно быть больше 2 и меньше 64 символов");
+      alert("Название должно быть больше 2 и меньше 64 символов, а также не должно состоять из пустых пробелов");
       return;
     }
     createNewTodo({ title: todoTitleValue, isDone: false })
