@@ -1,27 +1,21 @@
-import React, { useState } from "react";
-import type { Todo, TodoInfo } from "../types/types";
-import { deleteTodo, updateTodo, getTodos } from "../api";
-import { todoInfoFilterEnum } from "../types/types";
+import { useState } from "react";
+import type { Todo } from "../types/types";
 import { validateTitle } from "../utils/validation/validateTitle";
 
 interface props {
-  title: string;
-  isDone: boolean;
-  id: number;
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
-  setInfo: React.Dispatch<React.SetStateAction<TodoInfo>>;
-  todoFilter: todoInfoFilterEnum;
+  todo: Todo;
+  handleDeleteButton: (todo: Todo) => void;
+  checkboxCheckedChange: (todo: Todo) => void;
+  updateTodosAfterEdit: (todo: Todo, todoTitle: string) => void;
 }
 
 const TodoListItem = ({
-  setTodos,
-  id,
-  title,
-  isDone,
-  setInfo,
-  todoFilter,
+  updateTodosAfterEdit,
+  todo,
+  checkboxCheckedChange,
+  handleDeleteButton,
 }: props) => {
-  const [editValue, setEditValue] = useState<string>(title);
+  const [editValue, setEditValue] = useState<string>(todo.title);
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   const handleEditButton = () => {
@@ -33,68 +27,55 @@ const TodoListItem = ({
       alert("Название должно быть больше 2 и меньше 64 символов");
       return;
     }
-
-    updateTodo(id, { title: editValue })
-      .then((result) => {
-        setTodos((data) =>
-          data.map((todo) => (todo.id === id ? result : todo))
-        );
-        return getTodos(todoFilter);
-      })
-      .then((todos) => {
-        if (todos && todos.info) {
-          setTodos(todos.data);
-          setInfo(todos.info);
-        }
-      });
+    updateTodosAfterEdit(todo, editValue);
     setIsEdit(!isEdit);
   };
 
-  const checkboxCheckedChange = () => {
-    updateTodo(id, { isDone: !isDone })
-      .then((result) => {
-        setTodos((data) =>
-          data.map((todo) => (todo.id === id ? result : todo))
-        );
-        return getTodos(todoFilter);
-      })
-      .then((todos) => {
-        if (todos && todos.info) {
-          setInfo(todos.info)
-          setTodos(todos.data);
-        }
-      });
-  };
+  // const checkboxCheckedChange = () => {
+  //   updateTodo(todo.id, { isDone: !todo.isDone })
+  //     .then((result) => {
+  //       setTodos((data) =>
+  //         data.map((item) => (item.id === todo.id ? result : item))
+  //       );
+  //       return getTodos(todoFilter);
+  //     })
+  //     .then((todos) => {
+  //       if (todos && todos.info) {
+  //         setInfo(todos.info)
+  //         setTodos(todos.data);
+  //       }
+  //     });
+  // };
 
   const handleCancelButton = () => {
     setIsEdit(!isEdit);
-    setEditValue(title);
+    setEditValue(todo.title);
   };
 
-  const handleDeleteButton = () => {
-    deleteTodo(id)
-      .then(() => {
-        setTodos((data) => data.filter((todo) => todo.id !== id));
-        return getTodos(todoFilter);
-      })
-      .then((todos) => {
-        if (todos && todos.info) {
-          setTodos(todos.data);
-          setInfo(todos.info);
-        }
-      });
-  };
+  // const handleDeleteButton = () => {
+  //   deleteTodo(todo.id)
+  //     .then(() => {
+  //       setTodos((data) => data.filter((item) => item.id !== todo.id));
+  //       return getTodos(todoFilter);
+  //     })
+  //     .then((todos) => {
+  //       if (todos && todos.info) {
+  //         setTodos(todos.data);
+  //         setInfo(todos.info);
+  //       }
+  //     });
+  // };
 
   return (
-    <li className="todo__list-item" id={id.toString()}>
+    <li className="todo__list-item" id={todo.id.toString()}>
       <div className="todo__list-item-container">
         {!isEdit ? (
           <>
             <input
               className="todo__input-checkbox"
               type="checkbox"
-              onChange={checkboxCheckedChange}
-              checked={isDone}
+              onChange={() => checkboxCheckedChange(todo)}
+              checked={todo.isDone}
             />
             <h3 className="todo__title">{editValue}</h3>
             <button
@@ -128,7 +109,7 @@ const TodoListItem = ({
             </button>
             <button
               className="button__input todo__button-delete"
-              onClick={handleDeleteButton}
+              onClick={() => handleDeleteButton(todo)}
               aria-label="delete"
             >
               <svg
@@ -175,8 +156,8 @@ const TodoListItem = ({
             <input
               className="todo__input-checkbox"
               type="checkbox"
-              onChange={checkboxCheckedChange}
-              checked={isDone}
+              onChange={() => checkboxCheckedChange(todo)}
+              checked={todo.isDone}
               disabled
             />
             <input
