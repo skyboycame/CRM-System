@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { Todo } from "../types/types";
 import { validateTitle } from "../utils/validation/validateTitle";
+import { notification } from "antd";
 
-interface props {
+interface Props {
   todo: Todo;
   handleDeleteButton: (todo: Todo) => void;
   checkboxCheckedChange: (todo: Todo) => void;
@@ -14,7 +15,7 @@ const TodoListItem = ({
   todo,
   checkboxCheckedChange,
   handleDeleteButton,
-}: props) => {
+}: Props) => {
   const [editValue, setEditValue] = useState<string>(todo.title);
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
@@ -24,47 +25,23 @@ const TodoListItem = ({
 
   const handleOkEditButton = () => {
     if (!validateTitle(editValue)) {
-      alert("Название должно быть больше 2 и меньше 64 символов");
+       notification.error({
+        message: "Ошибка валидации",
+        description: "Название должно быть больше 2 и меньше 64 символов, а также не должно состоять из пустых пробелов",
+        placement: "topRight",
+        duration: 4.5
+      });
       return;
     }
     updateTodosAfterEdit(todo, editValue);
     setIsEdit(!isEdit);
   };
 
-  // const checkboxCheckedChange = () => {
-  //   updateTodo(todo.id, { isDone: !todo.isDone })
-  //     .then((result) => {
-  //       setTodos((data) =>
-  //         data.map((item) => (item.id === todo.id ? result : item))
-  //       );
-  //       return getTodos(todoFilter);
-  //     })
-  //     .then((todos) => {
-  //       if (todos && todos.info) {
-  //         setInfo(todos.info)
-  //         setTodos(todos.data);
-  //       }
-  //     });
-  // };
-
   const handleCancelButton = () => {
     setIsEdit(!isEdit);
     setEditValue(todo.title);
   };
 
-  // const handleDeleteButton = () => {
-  //   deleteTodo(todo.id)
-  //     .then(() => {
-  //       setTodos((data) => data.filter((item) => item.id !== todo.id));
-  //       return getTodos(todoFilter);
-  //     })
-  //     .then((todos) => {
-  //       if (todos && todos.info) {
-  //         setTodos(todos.data);
-  //         setInfo(todos.info);
-  //       }
-  //     });
-  // };
 
   return (
     <li className="todo__list-item" id={todo.id.toString()}>

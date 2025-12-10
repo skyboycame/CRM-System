@@ -36,10 +36,10 @@ const TodosPage = () => {
         console.error("Ошибка при создании задачи:", error);
         alert("Не удалось создать задачу");
         throw error;
-      });
+      })
   };
 
-  const GetTodoByFilter = (filter: todoInfoFilterEnum) => {
+  const getTodoByFilter = (filter: todoInfoFilterEnum) => {
     setTodoFilter(filter);
   };
 
@@ -121,7 +121,7 @@ const TodosPage = () => {
         onAddTodo={handleAddTodo}
       ></CreateTodo>
       <FilterButtons
-        GetTodoByFilter={GetTodoByFilter}
+        getTodoByFilter={getTodoByFilter}
         info={info}
         todoFilter={todoFilter}
       ></FilterButtons>

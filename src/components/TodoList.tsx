@@ -1,7 +1,7 @@
 import { type Todo } from "../types/types";
 import TodoListItem from "./TodoListItem";
 
-interface props {
+interface Props {
   todos: Todo[];
   handleDeleteButton: (todo: Todo) => void;
   checkboxCheckedChange: (todo: Todo) => void;
@@ -13,7 +13,7 @@ const TodoList = ({
   checkboxCheckedChange,
   handleDeleteButton,
   todos,
-}: props) => {
+}: Props) => {
   return (
     <>
       <ul className="todo__list">

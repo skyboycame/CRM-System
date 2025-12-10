@@ -7,28 +7,28 @@
 
 :root {
     /* Основная палитра */
-    --primary: #3091ff;    /* Теплый оранжевый */
+    --primary: #3091ff;   
     --primary-hover: #065bbd;
     
     /* Фоны */
-    --bg-primary: #d6e9ff;   /* Кремовый */
-    --bg-secondary: #a1cdff; /* Светло-желтый */
-    --bg-tertiary: #FDE68A;  /* Пастельный желтый */
+    --bg-primary: #d6e9ff;   
+    --bg-secondary: #a1cdff; 
+    --bg-tertiary: #FDE68A;  
     
     /* Текст */
-    --text-primary: #78350F;   /* Темно-коричневый */
-    --text-secondary: #92400E; /* Коричневый */
-    --text-muted: #B45309;     /* Светло-коричневый */
+    --text-primary: #78350F;   
+    --text-secondary: #92400E;
+    --text-muted: #B45309;     
     
     /* Границы */
     --border-light: #a1cdff;
     --border-medium: #FBBF24;
     
     /* Статусы */
-    --success: #059669;    /* Зеленый */
-    --warning: #DC2626;    /* Красный */
-    --error: #B91C1C;      /* Темно-красный */
-    --info: #7C3AED;       /* Фиолетовый */
+    --success: #059669;  
+    --warning: #DC2626;    
+    --error: #B91C1C;      
+    --info: #7C3AED;     
 }
 
 body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure {
