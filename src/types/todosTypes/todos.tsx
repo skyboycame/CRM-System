@@ -1,9 +1,10 @@
-export interface TodoRequest { 
-	title?: string;
- 	isDone?: boolean;  // изменение статуса задачи происходит через этот флаг
- } 
 
-// или так type TodoRequest = Partial<Omit<Todo, "id" | "created">>;
+
+ export type TodoRequest  = Partial<Omit<Todo, 'id' | 'created'>>
+
+
+
+
 
 export interface Todo { 
 	id: number;
@@ -25,3 +26,11 @@ export interface MetaResponse<T, N> {
 		totalAmount: number
 	}
 }
+
+
+ export enum todoInfoFilterEnum {
+	all = 'all',
+	inWork = 'inWork',
+	completed = 'completed'
+}
+
