@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import type { SetStateAction } from "react";
-import { validateTitle } from "../utils/validation/validateTitle";
-import { notification } from "antd";
+import { validateTitle } from "../../utils/validation/validateTitle";
+import type { Todo } from "../../types/types";
+import styles from './CreateTodo.module.css'
 
 interface Props {
   todoTitleValue: string;
   setTodoTitleValue: React.Dispatch<SetStateAction<string>>;
-  onAddTodo: (title: string) => Promise<void>;
+  onAddTodo: (title: string) => Promise<Todo>;
 }
 
 const CreateTodo = ({
@@ -22,15 +23,7 @@ const CreateTodo = ({
 
   const createAndValidateTodo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateTitle(todoTitleValue)) {
-      notification.error({
-        message: "Ошибка валидации",
-        description: "Название должно быть больше 2 и меньше 64 символов, а также не должно состоять из пустых пробелов",
-        placement: "topRight",
-        duration: 4.5
-      });
-      return;
-    }
+    if(!validateTitle(todoTitleValue)) return
     setIsLoading(true);
     
     try {
@@ -48,12 +41,12 @@ const CreateTodo = ({
         value={todoTitleValue}
         onChange={handleInputChange}
         placeholder="Task To Be Done..."
-        className="CreateTodo__input"
+        className={styles.input}
         name="CreateTodoTodo"
       />
       <button 
         type="submit" 
-        className="CreateTodo__button"
+        className={styles.button}
         disabled={isLoading}
       >
         {isLoading ? "..." : "Add"}

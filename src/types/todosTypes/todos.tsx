@@ -28,9 +28,11 @@ export interface MetaResponse<T, N> {
 }
 
 
- export enum todoInfoFilterEnum {
-	all = 'all',
-	inWork = 'inWork',
-	completed = 'completed'
+ export enum TodoInfoFilterEnum {
+	ALL = 'all',
+	IN_WORK = 'inWork',
+	COMPLETED = 'completed'
 }
+
+export  type TempTodo = Omit<Todo, 'id'> & { id: number | string };
 

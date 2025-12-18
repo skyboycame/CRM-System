@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { Todo } from "../types/types";
-import { validateTitle } from "../utils/validation/validateTitle";
-import { notification } from "antd";
+import type { Todo } from "../../types/types";
+import { validateTitle } from "../../utils/validation/validateTitle";
+import styles from './TodoListItem.module.css'
 
 interface Props {
   todo: Todo;
@@ -25,14 +25,8 @@ const TodoListItem = ({
 
   const handleOkEditButton = () => {
     if (!validateTitle(editValue)) {
-       notification.error({
-        message: "Ошибка валидации",
-        description: "Название должно быть больше 2 и меньше 64 символов, а также не должно состоять из пустых пробелов",
-        placement: "topRight",
-        duration: 4.5
-      });
-      return;
-    }
+        return 
+      }
     updateTodosAfterEdit(todo, editValue);
     setIsEdit(!isEdit);
   };
@@ -44,24 +38,24 @@ const TodoListItem = ({
 
 
   return (
-    <li className="todo__list-item" id={todo.id.toString()}>
-      <div className="todo__list-item-container">
+    <li className={styles.listItem} id={todo.id.toString()}>
+      <div className={styles.container}>
         {!isEdit ? (
           <>
             <input
-              className="todo__input-checkbox"
+              className={styles.checkbox}
               type="checkbox"
               onChange={() => checkboxCheckedChange(todo)}
               checked={todo.isDone}
             />
-            <h3 className="todo__title">{editValue}</h3>
+            <h3 className={styles.title}>{editValue}</h3>
             <button
               onClick={handleEditButton}
-              className="button__input todo__button-edit"
+              className={styles.input}
               aria-label="edit"
             >
               <svg
-                className="button__edit-svg"
+                className={styles.editSvg}
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -85,12 +79,12 @@ const TodoListItem = ({
               </svg>
             </button>
             <button
-              className="button__input todo__button-delete"
+              className={`${styles.input} ${styles.buttonDelete}`}
               onClick={() => handleDeleteButton(todo)}
               aria-label="delete"
             >
               <svg
-                className="button__delete-svg"
+                className={styles.deleteButtonSvg}
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -131,7 +125,7 @@ const TodoListItem = ({
         ) : (
           <>
             <input
-              className="todo__input-checkbox"
+              className={styles.checkbox}
               type="checkbox"
               onChange={() => checkboxCheckedChange(todo)}
               checked={todo.isDone}
@@ -141,18 +135,18 @@ const TodoListItem = ({
               placeholder="Edit Your Todo Name..."
               onChange={(e) => setEditValue(e.target.value)}
               type="text"
-              className="todo__title"
+              className={styles.title}
               value={editValue}
             />
-            <button className="button__input" onClick={handleOkEditButton}>
+            <button className={styles.input} onClick={handleOkEditButton}>
               Ok
             </button>
-            <button className="button__input" onClick={handleCancelButton}>
+            <button className={styles.input} onClick={handleCancelButton}>
               Cancel
             </button>
           </>
         )}
-        <div className="todo__buttons"></div>
+        <div className={styles.todoButtons}></div>
       </div>
     </li>
   );

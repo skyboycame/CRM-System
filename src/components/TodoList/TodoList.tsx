@@ -1,5 +1,6 @@
-import { type Todo } from "../types/types";
-import TodoListItem from "./TodoListItem";
+import type { Todo } from "../../types/types";
+import TodoListItem from "../TodoListItem/TodoListItem";
+import styles from './TodoList.module.css'
 
 interface Props {
   todos: Todo[];
@@ -16,7 +17,7 @@ const TodoList = ({
 }: Props) => {
   return (
     <>
-      <ul className="todo__list">
+      <ul className={styles.list}>
         {todos.map((todo) => (
           <TodoListItem
             key={todo.id}
