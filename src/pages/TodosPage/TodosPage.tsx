@@ -82,17 +82,11 @@ const TodosPage = () => {
 
   const checkboxCheckedChange = (todo: Todo) => {
     const previosTodos = [...todos];
-    const changedTodo: Todo = {
-      id: todo.id,
-      title: todo.title,
-      created: todo.created,
-      isDone: !todo.isDone,
-    };
     const updatedTodos = todos.map((item) =>
-      item.id === todo.id ? changedTodo : item
+      item.id === todo.id ? { ...item, isDone: !item.isDone } : item
     );
     setTodos(updatedTodos);
-    updateStatistics(updatedTodos);
+
     return updateTodo(todo.id, { isDone: !todo.isDone })
       .then(() => {
         return getTodos(todoFilter);
@@ -100,7 +94,7 @@ const TodosPage = () => {
       .then((todos) => {
         if (todos && todos.info) {
           setInfo(todos.info);
-          setTodos(todos.data);
+          setTodos(todos.data)
         }
       })
       .catch((error) => {
