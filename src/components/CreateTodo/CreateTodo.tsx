@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import type { SetStateAction } from "react";
 import { validateTitle } from "../../utils/validation/validateTitle";
-import type { Todo } from "../../types/types";
 import styles from './CreateTodo.module.css'
 
 interface Props {
   todoTitleValue: string;
   setTodoTitleValue: React.Dispatch<SetStateAction<string>>;
-  onAddTodo: (title: string) => Promise<Todo>;
+  onAddTodo: (title: string) => Promise<void>;
 }
 
 const CreateTodo = ({
