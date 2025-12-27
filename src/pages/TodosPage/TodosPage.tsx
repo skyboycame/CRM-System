@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { TempTodo, Todo, TodoInfo } from "../../types/types";
+import type { Todo, TodoInfo } from "../../types/types";
 import TodoList from "../../components/TodoList/TodoList";
 import CreateTodo from "../../components/CreateTodo/CreateTodo";
 import { TodoInfoFilterEnum } from "../../types/types";
@@ -28,57 +28,47 @@ const TodosPage = () => {
   };
 
   const handleAddTodo = (title: string) => {
-    const tempId = Date.now();
-    const tempTodo: TempTodo = {
-      id: tempId,
-      title,
-      isDone: false,
-      created: new Date().toISOString(),
-    };
-    const optimisticTodos = [...todos, tempTodo as Todo];
-    setTodos(optimisticTodos);
-    updateStatistics(optimisticTodos);
-    setTodoTitleValue("");
-    const previousTodos = [...todos];
-    return createNewTodo({ title, isDone: false })
-      .then((serverTodo: Todo) => {
-        setTodos((prev) =>
-          prev.map((item) =>
-            (item.id as unknown) === tempId ? serverTodo : item
-          )
-        );
-        updateStatistics([...previousTodos, serverTodo]);
-        return serverTodo;
-      })
-      .catch((error) => {
-        console.error("Ошибка при создании задачи:", error);
-        setTodos(previousTodos);
-        updateStatistics(previousTodos);
-        setTodoTitleValue(title);
-        alert("Не удалось создать задачу");
-        throw error;
-      });
-  };
+  setTodoTitleValue("");
+
+  return createNewTodo({ title, isDone: false })
+    .then(() => {
+      return getTodos(todoFilter);
+    })
+    .then((todos) => {
+      if (todos && todos.info) {
+        setTodos(todos.data);
+        setInfo(todos.info);
+      }
+    })
+    .catch((error) => {
+      console.error("Ошибка при создании задачи:", error);
+      setTodoTitleValue(title);
+      alert("Не удалось создать задачу");
+      throw error;
+    });
+};
 
   const getTodoByFilter = (filter: TodoInfoFilterEnum) => {
     setTodoFilter(filter);
   };
 
   const handleDeleteButton = (todo: Todo) => {
-    const previosTodos = [...todos];
-    const updatedTodos = todos.filter((item) => item.id !== todo.id);
-    setTodos(updatedTodos);
-    updateStatistics(updatedTodos);
-    return deleteTodo(todo.id)
-      .then(() => {})
-      .catch((error) => {
-        console.error("Ошибка при удалении задачи задачи:", error);
-        setTodos(previosTodos);
-        updateStatistics(previosTodos);
-        alert("Не удалось удалить задачу");
-        throw error;
-      });
-  };
+  return deleteTodo(todo.id)
+    .then(() => {
+      return getTodos(todoFilter);
+    })
+    .then((todos) => {
+      if (todos && todos.info) {
+        setTodos(todos.data);
+        setInfo(todos.info);
+      }
+    })
+    .catch((error) => {
+      console.error("Ошибка при удалении задачи:", error);
+      alert("Не удалось удалить задачу");
+      throw error;
+    });
+};
 
   const checkboxCheckedChange = (todo: Todo) => {
     const previosTodos = [...todos];
@@ -118,7 +108,6 @@ const TodosPage = () => {
       item.id === todo.id ? changedTodo : item
     );
     setTodos(updatedTodos);
-    updateStatistics(updatedTodos);
     return updateTodo(todo.id, { title: todoTitle })
       .then(() => {
         return getTodos(todoFilter);
