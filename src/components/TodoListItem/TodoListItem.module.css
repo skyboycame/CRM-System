@@ -3,10 +3,14 @@
 }
 
 .container {
+  width: 100%;
   display: grid;
-  grid-template-columns: auto 1fr auto auto; 
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 8px;
+}
+.container > * {
+  min-width: 0;
 }
 
 .listItem {
@@ -67,6 +71,7 @@
 }
 
 .title {
+  width: 100%;
   background-color: var(--bg-primary);
   border-radius: 5px;
   padding: 5px 0 5px 10px;

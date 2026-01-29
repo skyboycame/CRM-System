@@ -1,3 +1,4 @@
+import { List } from "antd";
 import type { Todo } from "../../types/types";
 import TodoListItem from "../TodoListItem/TodoListItem";
 import styles from './TodoList.module.css'
@@ -17,7 +18,7 @@ const TodoList = ({
 }: Props) => {
   return (
     <>
-      <ul className={styles.list}>
+      <List className={styles.list}>
         {todos.map((todo) => (
           <TodoListItem
             key={todo.id}
@@ -27,7 +28,7 @@ const TodoList = ({
             handleDeleteButton={handleDeleteButton}
           ></TodoListItem>
         ))}
-      </ul>
+      </List>
     </>
   );
 };

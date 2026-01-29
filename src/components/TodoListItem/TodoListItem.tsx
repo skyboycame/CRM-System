@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Todo } from "../../types/types";
 import { validateTitle } from "../../utils/validation/validateTitle";
 import styles from './TodoListItem.module.css'
+import { Button, Input, List } from "antd";
 
 interface Props {
   todo: Todo;
@@ -38,20 +39,20 @@ const TodoListItem = ({
 
 
   return (
-    <li className={styles.listItem} id={todo.id.toString()}>
+    <List.Item className={styles.listItem} id={todo.id.toString()}>
       <div className={styles.container}>
         {!isEdit ? (
           <>
-            <input
-              className={styles.checkbox}
+            <Input
+              rootClassName={styles.checkbox}
               type="checkbox"
               onChange={() => checkboxCheckedChange(todo)}
               checked={todo.isDone}
             />
             <h3 className={styles.title}>{editValue}</h3>
-            <button
+            <Button
               onClick={handleEditButton}
-              className={styles.input}
+              rootClassName={styles.input}
               aria-label="edit"
             >
               <svg
@@ -77,8 +78,8 @@ const TodoListItem = ({
                   strokeLinejoin="round"
                 />
               </svg>
-            </button>
-            <button
+            </Button>
+            <Button
               className={`${styles.input} ${styles.buttonDelete}`}
               onClick={() => handleDeleteButton(todo)}
               aria-label="delete"
@@ -120,35 +121,35 @@ const TodoListItem = ({
                   strokeLinejoin="round"
                 />
               </svg>
-            </button>
+            </Button>
           </>
         ) : (
           <>
-            <input
-              className={styles.checkbox}
+            <Input
+              rootClassName={styles.checkbox}
               type="checkbox"
               onChange={() => checkboxCheckedChange(todo)}
               checked={todo.isDone}
               disabled
             />
-            <input
+            <Input
               placeholder="Edit Your Todo Name..."
               onChange={(e) => setEditValue(e.target.value)}
               type="text"
-              className={styles.title}
+              rootClassName={styles.title}
               value={editValue}
             />
-            <button className={styles.input} onClick={handleOkEditButton}>
+            <Button rootClassName={styles.input} onClick={handleOkEditButton}>
               Ok
-            </button>
-            <button className={styles.input} onClick={handleCancelButton}>
+            </Button>
+            <Button rootClassName={styles.input} onClick={handleCancelButton}>
               Cancel
-            </button>
+            </Button>
           </>
         )}
         <div className={styles.todoButtons}></div>
       </div>
-    </li>
+    </List.Item>
   );
 };
 

@@ -15,3 +15,8 @@
   min-height: 2rem;
   margin-left: 1rem;
 }
+
+.formRow {
+  display: flex;  
+  align-items: center;
+}
