@@ -17,7 +17,7 @@ const TodosPage = () => {
   });
   const [todoTitleValue, setTodoTitleValue] = useState<string>("");
   const [todoFilter, setTodoFilter] = useState<TodoInfoFilterEnum>(
-    TodoInfoFilterEnum.ALL
+    TodoInfoFilterEnum.ALL,
   );
 
   const updateStatistics = (todosList: Todo[]) => {
@@ -28,52 +28,52 @@ const TodosPage = () => {
   };
 
   const handleAddTodo = (title: string) => {
-  setTodoTitleValue("");
+    setTodoTitleValue("");
 
-  return createNewTodo({ title, isDone: false })
-    .then(() => {
-      return getTodos(todoFilter);
-    })
-    .then((todos) => {
-      if (todos && todos.info) {
-        setTodos(todos.data);
-        setInfo(todos.info);
-      }
-    })
-    .catch((error) => {
-      console.error("Ошибка при создании задачи:", error);
-      setTodoTitleValue(title);
-      alert("Не удалось создать задачу");
-      throw error;
-    });
-};
+    return createNewTodo({ title, isDone: false })
+      .then(() => {
+        return getTodos(todoFilter);
+      })
+      .then((todos) => {
+        if (todos && todos.info) {
+          setTodos(todos.data);
+          setInfo(todos.info);
+        }
+      })
+      .catch((error) => {
+        console.error("Ошибка при создании задачи:", error);
+        setTodoTitleValue(title);
+        alert("Не удалось создать задачу");
+        throw error;
+      });
+  };
 
   const getTodoByFilter = (filter: TodoInfoFilterEnum) => {
     setTodoFilter(filter);
   };
 
   const handleDeleteButton = (todo: Todo) => {
-  return deleteTodo(todo.id)
-    .then(() => {
-      return getTodos(todoFilter);
-    })
-    .then((todos) => {
-      if (todos && todos.info) {
-        setTodos(todos.data);
-        setInfo(todos.info);
-      }
-    })
-    .catch((error) => {
-      console.error("Ошибка при удалении задачи:", error);
-      alert("Не удалось удалить задачу");
-      throw error;
-    });
-};
+    return deleteTodo(todo.id)
+      .then(() => {
+        return getTodos(todoFilter);
+      })
+      .then((todos) => {
+        if (todos && todos.info) {
+          setTodos(todos.data);
+          setInfo(todos.info);
+        }
+      })
+      .catch((error) => {
+        console.error("Ошибка при удалении задачи:", error);
+        alert("Не удалось удалить задачу");
+        throw error;
+      });
+  };
 
   const checkboxCheckedChange = (todo: Todo) => {
     const previosTodos = [...todos];
     const updatedTodos = todos.map((item) =>
-      item.id === todo.id ? { ...item, isDone: !item.isDone } : item
+      item.id === todo.id ? { ...item, isDone: !item.isDone } : item,
     );
     setTodos(updatedTodos);
 
@@ -84,7 +84,7 @@ const TodosPage = () => {
       .then((todos) => {
         if (todos && todos.info) {
           setInfo(todos.info);
-          setTodos(todos.data)
+          setTodos(todos.data);
         }
       })
       .catch((error) => {
@@ -105,7 +105,7 @@ const TodosPage = () => {
       isDone: todo.isDone,
     };
     const updatedTodos = todos.map((item) =>
-      item.id === todo.id ? changedTodo : item
+      item.id === todo.id ? changedTodo : item,
     );
     setTodos(updatedTodos);
     return updateTodo(todo.id, { title: todoTitle })
@@ -127,13 +127,22 @@ const TodosPage = () => {
       });
   };
 
-  useEffect(() => {
+  const getFilteredTodos = () => {
     getTodos(todoFilter).then((todos) => {
       if (todos && todos.info) {
         setTodos(todos.data);
         setInfo(todos.info);
       }
     });
+  };
+  useEffect(() => {
+    getFilteredTodos();
+    const intervalId = setInterval(() => {
+      getFilteredTodos();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todoFilter]);
 
   return (

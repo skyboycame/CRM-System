@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { TodoInfoFilterEnum, type TodoInfo } from "../../types/types";
 import styles from './FilterButtons.module.css'
 
@@ -16,24 +17,24 @@ const FilterButtons = ({ todoFilter, info, getTodoByFilter }: Props) => {
 
   return (
     <div className={styles.container}>
-      <button
+      <Button
         className={getButtonClass(TodoInfoFilterEnum.ALL)}
         onClick={() => getTodoByFilter(TodoInfoFilterEnum.ALL)}
       >
         All {`(${info.all})`}
-      </button>
-      <button
+      </Button>
+      <Button
         className={getButtonClass(TodoInfoFilterEnum.IN_WORK)}
         onClick={() => getTodoByFilter(TodoInfoFilterEnum.IN_WORK)}
       >
         inWork {`(${info.inWork})`}
-      </button>
-      <button
+      </Button>
+      <Button
         className={getButtonClass(TodoInfoFilterEnum.COMPLETED)}
         onClick={() => getTodoByFilter(TodoInfoFilterEnum.COMPLETED)}
       >
         Completed {`(${info.completed})`}
-      </button>
+      </Button>
     </div>
   );
 };
