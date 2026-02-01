@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import type { Todo } from "../../types/types";
 import { validateTitle } from "../../utils/validation/validateTitle";
 import styles from './TodoListItem.module.css'
@@ -11,7 +11,7 @@ interface Props {
   updateTodosAfterEdit: (todo: Todo, todoTitle: string) => void;
 }
 
-const TodoListItem = ({
+const TodoListItem = memo(({
   updateTodosAfterEdit,
   todo,
   checkboxCheckedChange,
@@ -151,6 +151,6 @@ const TodoListItem = ({
       </div>
     </List.Item>
   );
-};
+});
 
 export default TodoListItem;
