@@ -14,9 +14,9 @@ export async function deleteTodo(id: number): Promise<void> {
 }
 
 export const getTodos = async (
-  filter?: TodoInfoFilterEnum,
+  filter: TodoInfoFilterEnum = TodoInfoFilterEnum.ALL ,
 ): Promise<MetaResponse<Todo, TodoInfo>> => {
-  const params: GetParams | undefined = filter ? { filter } : undefined;
+  const params: GetParams  = { filter }
 
   const response = await api.get<MetaResponse<Todo, TodoInfo>>("/todos", {
     params,

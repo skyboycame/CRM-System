@@ -26,7 +26,7 @@ const TodoList = ({
             updateTodosAfterEdit={updateTodosAfterEdit}
             checkboxCheckedChange={checkboxCheckedChange}
             handleDeleteButton={handleDeleteButton}
-          ></TodoListItem>
+          />
         ))}
       </List>
     </>

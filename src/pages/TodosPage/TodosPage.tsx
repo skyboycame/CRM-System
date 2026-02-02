@@ -5,6 +5,7 @@ import CreateTodo from "../../components/CreateTodo/CreateTodo";
 import { TodoInfoFilterEnum } from "../../types/types";
 import { createNewTodo, deleteTodo, getTodos, updateTodo } from "../../api";
 import FilterButtons from "../../components/FilterButtons/FilterButtons";
+import { notifyError } from "../../utils/notify/notify";
 
 
 const TodosPage = () => {
@@ -37,11 +38,9 @@ const handleAddTodo = useCallback((title: string) => {
         setInfo(todos.info);
       }
     })
-    .catch((error) => {
-      console.error("Ошибка при создании задачи:", error);
+    .catch((e) => {
       setTodoTitleValue(title);
-      alert("Не удалось создать задачу");
-      throw error;
+      notifyError('Добавление todo', e)
     });
 }, [todoFilter]);
 
@@ -58,10 +57,8 @@ const handleDeleteButton = useCallback((todo: Todo) => {
         setInfo(todos.info);
       }
     })
-    .catch((error) => {
-      console.error("Ошибка при удалении задачи:", error);
-      alert("Не удалось удалить задачу");
-      throw error;
+    .catch((e) => {
+      notifyError('Удаление todo', e)
     });
 }, [todoFilter]);
 
@@ -82,12 +79,10 @@ const handleDeleteButton = useCallback((todo: Todo) => {
         setTodos(todos.data);
       }
     })
-    .catch((error) => {
-      console.error("Ошибка при изменение статуса задачи:", error);
-      alert("Не удалось изменить статус задачи");
+    .catch((e) => {
+      notifyError('Обновление todo', e)
       setTodos(previosTodos);
       updateStatistics(previosTodos);
-      throw error;
     });
 }, [todos, todoFilter]);
 
@@ -115,12 +110,10 @@ const handleDeleteButton = useCallback((todo: Todo) => {
         setTodos(todos.data);
       }
     })
-    .catch((error) => {
-      console.error("Ошибка при изменение статуса задачи:", error);
-      alert("Не удалось изменить статус задачи");
+    .catch((e) => {
+      notifyError('Обновление статуса todo', e)
       setTodos(previosTodos);
       updateStatistics(previosTodos);
-      throw error;
     });
 }, [todos, todoFilter]);
 
