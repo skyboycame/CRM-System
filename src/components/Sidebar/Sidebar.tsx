@@ -1,19 +1,26 @@
 import { Layout, Menu, type MenuProps } from "antd";
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import { UserOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import { useMemo } from "react";
 
 const { Sider } = Layout;
 
 const Sidebar = () => {
+  const location = useLocation();
+
+  const selectedKeys = useMemo(() => {
+    if (location.pathname.startsWith('/profile')) return '/profile';
+    return '/'
+  }, [location.pathname])
 
   const menuItems: MenuProps['items'] = [
     {
-      key: 'todos',
+      key: '/',
       icon: <CheckSquareOutlined />,
       label: <NavLink to="/">Todos</NavLink>
     },
     {
-      key: 'profile',
+      key: '/profile',
       icon: <UserOutlined />,
       label:  <NavLink to="/profile">Профиль</NavLink>
     }
@@ -21,9 +28,9 @@ const Sidebar = () => {
 
   return (
     <Sider>
-      <Menu>
-        <Menu items={menuItems}/>
-      </Menu>
+        <Menu
+        selectedKeys={[selectedKeys]}
+        items={menuItems}/>
     </Sider>
   );
 };

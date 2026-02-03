@@ -15,7 +15,6 @@ const TodosPage = () => {
     completed: 0,
     inWork: 0,
   });
-  const [todoTitleValue, setTodoTitleValue] = useState<string>("");
   const [todoFilter, setTodoFilter] = useState<TodoInfoFilterEnum>(
     TodoInfoFilterEnum.ALL,
   );
@@ -28,7 +27,6 @@ const TodosPage = () => {
   };
 
 const handleAddTodo = useCallback((title: string) => {
-  setTodoTitleValue("");
 
   return createNewTodo({ title, isDone: false })
     .then(() => getTodos(todoFilter))
@@ -39,7 +37,6 @@ const handleAddTodo = useCallback((title: string) => {
       }
     })
     .catch((e) => {
-      setTodoTitleValue(title);
       notifyError('Добавление todo', e)
     });
 }, [todoFilter]);
@@ -139,8 +136,6 @@ const handleDeleteButton = useCallback((todo: Todo) => {
   return (
     <div className="container">
       <CreateTodo
-        todoTitleValue={todoTitleValue}
-        setTodoTitleValue={setTodoTitleValue}
         onAddTodo={handleAddTodo}
       ></CreateTodo>
       <FilterButtons
