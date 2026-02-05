@@ -45,7 +45,7 @@ const handleAddTodo = useCallback((title: string) => {
     setTodoFilter(filter);
   };
 
-const handleDeleteButton = useCallback((todo: Todo) => {
+const handleDeleteTodo = useCallback((todo: Todo) => {
   return deleteTodo(todo.id)
     .then(() => getTodos(todoFilter))
     .then((todos) => {
@@ -146,7 +146,7 @@ const handleDeleteButton = useCallback((todo: Todo) => {
       <TodoList
         updateTodosAfterEdit={updateTodosAfterEdit}
         checkboxCheckedChange={checkboxCheckedChange}
-        handleDeleteButton={handleDeleteButton}
+        handleDeleteTodo={handleDeleteTodo}
         todos={todos}
       ></TodoList>
     </div>

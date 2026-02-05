@@ -1,11 +1,13 @@
 import { Layout } from "antd";
 import Sidebar from "../Sidebar/Sidebar";
-import { Content } from "antd/es/layout/layout";
 import { Outlet } from "react-router";
+import { memo } from "react";
 
-const MainLayout = () => {
+const MainLayout = memo(() => {
+  const { Content } = Layout;
+
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout>
       <Sidebar />
       <Layout>
         <Content style={{ padding: 24 }}>
@@ -14,6 +16,6 @@ const MainLayout = () => {
       </Layout>
     </Layout>
   );
-};
+});
 
 export default MainLayout;

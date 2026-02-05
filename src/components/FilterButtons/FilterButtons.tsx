@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Flex } from "antd";
 import { TodoInfoFilterEnum, type TodoInfo } from "../../types/types";
 import styles from './FilterButtons.module.css'
 
@@ -16,7 +16,7 @@ const FilterButtons = ({ todoFilter, info, getTodoByFilter }: Props) => {
   };
 
   return (
-    <div className={styles.container}>
+    <Flex gap="1rem" style={{ marginBottom: '1rem', marginTop: '1rem' }}>
       <Button
         className={getButtonClass(TodoInfoFilterEnum.ALL)}
         onClick={() => getTodoByFilter(TodoInfoFilterEnum.ALL)}
@@ -35,7 +35,7 @@ const FilterButtons = ({ todoFilter, info, getTodoByFilter }: Props) => {
       >
         Completed {`(${info.completed})`}
       </Button>
-    </div>
+    </Flex>
   );
 };
 

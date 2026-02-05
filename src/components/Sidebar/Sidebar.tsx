@@ -5,6 +5,19 @@ import { useMemo } from "react";
 
 const { Sider } = Layout;
 
+const menuItems: MenuProps['items'] = [
+  {
+    key: '/',
+    icon: <CheckSquareOutlined />,
+    label: <NavLink to="/">Todos</NavLink>
+  },
+  {
+    key: '/profile',
+    icon: <UserOutlined />,
+    label:  <NavLink to="/profile">Профиль</NavLink>
+  }
+]
+
 const Sidebar = () => {
   const location = useLocation();
 
@@ -13,18 +26,6 @@ const Sidebar = () => {
     return '/'
   }, [location.pathname])
 
-  const menuItems: MenuProps['items'] = [
-    {
-      key: '/',
-      icon: <CheckSquareOutlined />,
-      label: <NavLink to="/">Todos</NavLink>
-    },
-    {
-      key: '/profile',
-      icon: <UserOutlined />,
-      label:  <NavLink to="/profile">Профиль</NavLink>
-    }
-  ]
 
   return (
     <Sider>

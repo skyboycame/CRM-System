@@ -1,22 +1,6 @@
-.input {
-  background-color: var(--bg-primary);
-  border-radius: 5px;
-  padding: 5px 0 5px 10px;
-  -webkit-box-shadow: 2px 2px 2px 0px rgba(34, 60, 80, 0.2);
-  -moz-box-shadow: 2px 2px 2px 0px rgba(34, 60, 80, 0.2);
-  box-shadow: 2px 2px 2px 0px rgba(34, 60, 80, 0.2);
-  font-size: 1.17em;        
-  font-weight: normal;
-
-}
 
 .button {
   min-width: 5rem;
   min-height: 2rem;
   margin-left: 1rem;
-}
-
-.formRow {
-  display: flex;  
-  align-items: center;
 }

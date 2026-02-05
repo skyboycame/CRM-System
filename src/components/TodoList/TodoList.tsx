@@ -5,7 +5,7 @@ import styles from './TodoList.module.css'
 
 interface Props {
   todos: Todo[];
-  handleDeleteButton: (todo: Todo) => void;
+  handleDeleteTodo: (todo: Todo) => void;
   checkboxCheckedChange: (todo: Todo) => void;
   updateTodosAfterEdit: (todo: Todo, todoTitle: string) => void;
 }
@@ -13,7 +13,7 @@ interface Props {
 const TodoList = ({
   updateTodosAfterEdit,
   checkboxCheckedChange,
-  handleDeleteButton,
+  handleDeleteTodo,
   todos,
 }: Props) => {
   return (
@@ -25,7 +25,7 @@ const TodoList = ({
             todo={todo}
             updateTodosAfterEdit={updateTodosAfterEdit}
             checkboxCheckedChange={checkboxCheckedChange}
-            handleDeleteButton={handleDeleteButton}
+            handleDeleteTodo={handleDeleteTodo}
           />
         ))}
       </List>
