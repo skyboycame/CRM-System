@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { Todo, TodoInfo } from "../../types/types";
 import TodoList from "../../components/TodoList/TodoList";
 import CreateTodo from "../../components/CreateTodo/CreateTodo";
 import { TodoInfoFilterEnum } from "../../types/types";
 import { createNewTodo, deleteTodo, getTodos, updateTodo } from "../../api";
 import FilterButtons from "../../components/FilterButtons/FilterButtons";
+import { notifyError } from "../../utils/notify/notify";
 
-export const BASE_URL = "https://easydev.club/api/v1";
 
 const TodosPage = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -15,9 +15,8 @@ const TodosPage = () => {
     completed: 0,
     inWork: 0,
   });
-  const [todoTitleValue, setTodoTitleValue] = useState<string>("");
   const [todoFilter, setTodoFilter] = useState<TodoInfoFilterEnum>(
-    TodoInfoFilterEnum.ALL
+    TodoInfoFilterEnum.ALL,
   );
 
   const updateStatistics = (todosList: Todo[]) => {
@@ -27,120 +26,116 @@ const TodosPage = () => {
     setInfo({ all, completed, inWork });
   };
 
-  const handleAddTodo = (title: string) => {
-  setTodoTitleValue("");
+const handleAddTodo = useCallback((title: string) => {
 
   return createNewTodo({ title, isDone: false })
-    .then(() => {
-      return getTodos(todoFilter);
-    })
+    .then(() => getTodos(todoFilter))
     .then((todos) => {
       if (todos && todos.info) {
         setTodos(todos.data);
         setInfo(todos.info);
       }
     })
-    .catch((error) => {
-      console.error("Ошибка при создании задачи:", error);
-      setTodoTitleValue(title);
-      alert("Не удалось создать задачу");
-      throw error;
+    .catch((e) => {
+      notifyError('Добавление todo', e)
     });
-};
+}, [todoFilter]);
 
   const getTodoByFilter = (filter: TodoInfoFilterEnum) => {
     setTodoFilter(filter);
   };
 
-  const handleDeleteButton = (todo: Todo) => {
+const handleDeleteTodo = useCallback((todo: Todo) => {
   return deleteTodo(todo.id)
-    .then(() => {
-      return getTodos(todoFilter);
-    })
+    .then(() => getTodos(todoFilter))
     .then((todos) => {
       if (todos && todos.info) {
         setTodos(todos.data);
         setInfo(todos.info);
       }
     })
-    .catch((error) => {
-      console.error("Ошибка при удалении задачи:", error);
-      alert("Не удалось удалить задачу");
-      throw error;
+    .catch((e) => {
+      notifyError('Удаление todo', e)
     });
-};
+}, [todoFilter]);
 
-  const checkboxCheckedChange = (todo: Todo) => {
-    const previosTodos = [...todos];
-    const updatedTodos = todos.map((item) =>
-      item.id === todo.id ? { ...item, isDone: !item.isDone } : item
-    );
-    setTodos(updatedTodos);
+  const checkboxCheckedChange = useCallback((todo: Todo) => {
+  const previosTodos = [...todos];
 
-    return updateTodo(todo.id, { isDone: !todo.isDone })
-      .then(() => {
-        return getTodos(todoFilter);
-      })
-      .then((todos) => {
-        if (todos && todos.info) {
-          setInfo(todos.info);
-          setTodos(todos.data)
-        }
-      })
-      .catch((error) => {
-        console.error("Ошибка при изменение статуса задачи:", error);
-        alert("Не удалось изменить статус задачи");
-        setTodos(previosTodos);
-        updateStatistics(previosTodos);
-        throw error;
-      });
+  const updatedTodos = todos.map((item) =>
+    item.id === todo.id ? { ...item, isDone: !item.isDone } : item,
+  );
+
+  setTodos(updatedTodos);
+
+  return updateTodo(todo.id, { isDone: !todo.isDone })
+    .then(() => getTodos(todoFilter))
+    .then((todos) => {
+      if (todos && todos.info) {
+        setInfo(todos.info);
+        setTodos(todos.data);
+      }
+    })
+    .catch((e) => {
+      notifyError('Обновление todo', e)
+      setTodos(previosTodos);
+      updateStatistics(previosTodos);
+    });
+}, [todos, todoFilter]);
+
+  const updateTodosAfterEdit = useCallback((todo: Todo, todoTitle: string) => {
+  const previosTodos = [...todos];
+
+  const changedTodo: Todo = {
+    id: todo.id,
+    title: todoTitle,
+    created: todo.created,
+    isDone: todo.isDone,
   };
 
-  const updateTodosAfterEdit = (todo: Todo, todoTitle: string) => {
-    const previosTodos = [...todos];
-    const changedTodo: Todo = {
-      id: todo.id,
-      title: todoTitle,
-      created: todo.created,
-      isDone: todo.isDone,
-    };
-    const updatedTodos = todos.map((item) =>
-      item.id === todo.id ? changedTodo : item
-    );
-    setTodos(updatedTodos);
-    return updateTodo(todo.id, { title: todoTitle })
-      .then(() => {
-        return getTodos(todoFilter);
-      })
-      .then((todos) => {
-        if (todos && todos.info) {
-          setInfo(todos.info);
-          setTodos(todos.data);
-        }
-      })
-      .catch((error) => {
-        console.error("Ошибка при изменение статуса задачи:", error);
-        alert("Не удалось изменить статус задачи");
-        setTodos(previosTodos);
-        updateStatistics(previosTodos);
-        throw error;
-      });
-  };
+  const updatedTodos = todos.map((item) =>
+    item.id === todo.id ? changedTodo : item,
+  );
 
-  useEffect(() => {
+  setTodos(updatedTodos);
+
+  return updateTodo(todo.id, { title: todoTitle })
+    .then(() => getTodos(todoFilter))
+    .then((todos) => {
+      if (todos && todos.info) {
+        setInfo(todos.info);
+        setTodos(todos.data);
+      }
+    })
+    .catch((e) => {
+      notifyError('Обновление статуса todo', e)
+      setTodos(previosTodos);
+      updateStatistics(previosTodos);
+    });
+}, [todos, todoFilter]);
+
+  const getFilteredTodos = useCallback(() => {
     getTodos(todoFilter).then((todos) => {
       if (todos && todos.info) {
         setTodos(todos.data);
         setInfo(todos.info);
       }
     });
+  },[todoFilter]);
+
+  useEffect(() => {
+    getFilteredTodos();
+    const intervalId = setInterval(() => {
+      getFilteredTodos();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todoFilter]);
 
   return (
     <div className="container">
       <CreateTodo
-        todoTitleValue={todoTitleValue}
-        setTodoTitleValue={setTodoTitleValue}
         onAddTodo={handleAddTodo}
       ></CreateTodo>
       <FilterButtons
@@ -151,7 +146,7 @@ const TodosPage = () => {
       <TodoList
         updateTodosAfterEdit={updateTodosAfterEdit}
         checkboxCheckedChange={checkboxCheckedChange}
-        handleDeleteButton={handleDeleteButton}
+        handleDeleteTodo={handleDeleteTodo}
         todos={todos}
       ></TodoList>
     </div>

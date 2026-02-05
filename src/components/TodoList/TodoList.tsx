@@ -1,10 +1,11 @@
+import { List } from "antd";
 import type { Todo } from "../../types/types";
 import TodoListItem from "../TodoListItem/TodoListItem";
 import styles from './TodoList.module.css'
 
 interface Props {
   todos: Todo[];
-  handleDeleteButton: (todo: Todo) => void;
+  handleDeleteTodo: (todo: Todo) => void;
   checkboxCheckedChange: (todo: Todo) => void;
   updateTodosAfterEdit: (todo: Todo, todoTitle: string) => void;
 }
@@ -12,22 +13,22 @@ interface Props {
 const TodoList = ({
   updateTodosAfterEdit,
   checkboxCheckedChange,
-  handleDeleteButton,
+  handleDeleteTodo,
   todos,
 }: Props) => {
   return (
     <>
-      <ul className={styles.list}>
+      <List className={styles.list}>
         {todos.map((todo) => (
           <TodoListItem
             key={todo.id}
             todo={todo}
             updateTodosAfterEdit={updateTodosAfterEdit}
             checkboxCheckedChange={checkboxCheckedChange}
-            handleDeleteButton={handleDeleteButton}
-          ></TodoListItem>
+            handleDeleteTodo={handleDeleteTodo}
+          />
         ))}
-      </ul>
+      </List>
     </>
   );
 };
