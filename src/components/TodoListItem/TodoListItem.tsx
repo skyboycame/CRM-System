@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { useState } from "react";
 import type { Todo } from "../../types/types";
 import { validateTitle } from "../../utils/validation/validateTitle";
 import { Button, Checkbox, Input, List } from "antd";
@@ -10,7 +10,7 @@ interface Props {
   updateTodosAfterEdit: (todo: Todo, todoTitle: string) => void;
 }
 
-const TodoListItem = memo(
+const TodoListItem = 
   ({
     updateTodosAfterEdit,
     todo,
@@ -72,7 +72,7 @@ const TodoListItem = memo(
         />
       </List.Item>
     );
-  },
-);
+  }
+
 
 export default TodoListItem;

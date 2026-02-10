@@ -3,6 +3,7 @@ import { useState } from "react";
 import styles from "./CreateTodo.module.css";
 import { Button, Flex, Form, Input } from "antd";
 import { notifyError } from "../../utils/notify/notify";
+import { TODO_TITLE_MAX_LENGTH, TODO_TITLE_MIN_LENGTH } from "../../utils/validation/validateTitle";
 
 interface Props {
   onAddTodo: (title: string) => Promise<void>;
@@ -32,8 +33,8 @@ const CreateTodo = ({ onAddTodo }: Props) => {
           name="title"
           rules={[
             { required: true, message: "Введите название задачи" },
-            { min: 2, message: "Название должно быть не менее 2 символов" },
-            { max: 64, message: "Название должно быть не более 64 символов" },
+            { min: TODO_TITLE_MIN_LENGTH, message: "Название должно быть не менее 2 символов" },
+            { max: TODO_TITLE_MAX_LENGTH, message: "Название должно быть не более 64 символов" },
           ]}
         >
           <Input placeholder="Task To Be Done..." />

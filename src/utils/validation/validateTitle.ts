@@ -1,11 +1,15 @@
 import { notification } from "antd";
 
+
+export const TODO_TITLE_MIN_LENGTH = 2;
+export const TODO_TITLE_MAX_LENGTH = 64;
+
 export const validateTitleMin = (title: string): boolean => {
-  return title.length >= 2;
+  return title.length >= TODO_TITLE_MIN_LENGTH;
 };
 
 export const validateTitleMax = (title: string): boolean => {
-  return title.length <= 64;
+  return title.length <= TODO_TITLE_MAX_LENGTH;
 };
 
 export const validateTitleEmpty = (title: string): boolean => {
