@@ -1,88 +1,33 @@
 import type { TodoRequest, Todo, TodoInfo } from "../types/types";
 import { TodoInfoFilterEnum, type MetaResponse } from "../types/types";
+import { api } from "./axiosInstance";
 
-export const BASE_URL = "https://easydev.club/api/v1";
-
-export async function createNewTodo(
-  newTodo: TodoRequest,
-): Promise<Todo> {
-  const response = await fetch(`${BASE_URL}/todos`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newTodo),
-  });
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(`Ошибка ${response.status}: ${message}`);
-  }
-
-  const result = await response.json();
-  return result
+export async function createNewTodo(newTodo: TodoRequest): Promise<Todo> {
+  const response = await api.post<Todo>(`todos`, newTodo);
+  const result = response.data;
+  return result;
 }
 
-export async function deleteTodo(
-  id: number,
-): Promise<void> {
-  const response = await fetch(`${BASE_URL}/todos/${id}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(`Ошибка ${response.status}: ${message}`);
-  }
-
-  
+export async function deleteTodo(id: number): Promise<void> {
+  await api.delete<void>(`todos/${id}`);
 }
 
 export const getTodos = async (
-  status?: TodoInfoFilterEnum,
-): Promise<MetaResponse<Todo, TodoInfo> | undefined> => {
-  try {
-    let additionalUrl  = ''
-      if (status) {
-        additionalUrl  = `${BASE_URL}/todos?filter=${status}`;
-      } else {
-        additionalUrl  = `${BASE_URL}/todos`;
-      }
+  filter: TodoInfoFilterEnum = TodoInfoFilterEnum.ALL ,
+): Promise<MetaResponse<Todo, TodoInfo>> => {
 
-      const response = await fetch(additionalUrl )
-      if (!response.ok) {
-      const message = await response.text();
-      throw new Error(`Ошибка ${response.status}: ${message}`);
-    }
-    const result = await response.json()
-    return result
-  } catch (error) {
-    console.error(error)
-  }
-};
-
-
-export const updateTodo = async (
-  id: number,
-  updatedData: TodoRequest,
-):Promise<Todo> => {
-  const response = await fetch(`${BASE_URL}/todos/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(updatedData),
+  const response = await api.get<MetaResponse<Todo, TodoInfo>>("/todos", {
+    params : { filter }
   });
-
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(`Ошибка ${response.status}: ${message}`);
-  }
-
-  const result: Todo = await response.json();
-  console.log(result)
-  return result
-
-  
+  const result = response.data;
+  return result;
 };
+
+export async function updateTodo(
+  id: number,
+  updatedTodo: TodoRequest,
+): Promise<Todo> {
+  const response = await api.put<Todo>(`/todos/${id}`, updatedTodo);
+  const result = response.data;
+  return result;
+}

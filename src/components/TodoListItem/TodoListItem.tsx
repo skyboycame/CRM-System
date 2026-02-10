@@ -1,155 +1,78 @@
 import { useState } from "react";
 import type { Todo } from "../../types/types";
 import { validateTitle } from "../../utils/validation/validateTitle";
-import styles from './TodoListItem.module.css'
+import { Button, Checkbox, Input, List } from "antd";
 
 interface Props {
   todo: Todo;
-  handleDeleteButton: (todo: Todo) => void;
+  handleDeleteTodo: (todo: Todo) => void;
   checkboxCheckedChange: (todo: Todo) => void;
   updateTodosAfterEdit: (todo: Todo, todoTitle: string) => void;
 }
 
-const TodoListItem = ({
-  updateTodosAfterEdit,
-  todo,
-  checkboxCheckedChange,
-  handleDeleteButton,
-}: Props) => {
-  const [editValue, setEditValue] = useState<string>(todo.title);
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+const TodoListItem = 
+  ({
+    updateTodosAfterEdit,
+    todo,
+    checkboxCheckedChange,
+    handleDeleteTodo,
+  }: Props) => {
+    const [editValue, setEditValue] = useState<string>(todo.title);
+    const [isEdit, setIsEdit] = useState<boolean>(false);
 
-  const handleEditButton = () => {
-    setIsEdit(!isEdit);
-  };
+    const handleEditButton = () => {
+      setIsEdit(!isEdit);
+    };
 
-  const handleOkEditButton = () => {
-    if (!validateTitle(editValue)) {
-        return 
+    const handleOkEditButton = () => {
+      if (!validateTitle(editValue)) {
+        return;
       }
-    updateTodosAfterEdit(todo, editValue);
-    setIsEdit(!isEdit);
-  };
+      updateTodosAfterEdit(todo, editValue);
+      setIsEdit(!isEdit);
+    };
 
-  const handleCancelButton = () => {
-    setIsEdit(!isEdit);
-    setEditValue(todo.title);
-  };
+    const handleCancelButton = () => {
+      setIsEdit(!isEdit);
+      setEditValue(todo.title);
+    };
 
+    const actions = isEdit
+      ? [
+          <Button onClick={handleOkEditButton}>Ok</Button>,
+          <Button onClick={handleCancelButton}>Cancel</Button>,
+        ]
+      : [
+          <Button onClick={handleEditButton}>Edit</Button>,
+          <Button danger onClick={() => handleDeleteTodo(todo)}>
+            Delete
+          </Button>,
+        ];
 
-  return (
-    <li className={styles.listItem} id={todo.id.toString()}>
-      <div className={styles.container}>
-        {!isEdit ? (
-          <>
-            <input
-              className={styles.checkbox}
-              type="checkbox"
-              onChange={() => checkboxCheckedChange(todo)}
+    return (
+      <List.Item actions={actions}>
+        <List.Item.Meta
+          avatar={
+            <Checkbox
               checked={todo.isDone}
-            />
-            <h3 className={styles.title}>{editValue}</h3>
-            <button
-              onClick={handleEditButton}
-              className={styles.input}
-              aria-label="edit"
-            >
-              <svg
-                className={styles.editSvg}
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <button
-              className={`${styles.input} ${styles.buttonDelete}`}
-              onClick={() => handleDeleteButton(todo)}
-              aria-label="delete"
-            >
-              <svg
-                className={styles.deleteButtonSvg}
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3 6H5H21"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10 11V17"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M14 11V17"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </>
-        ) : (
-          <>
-            <input
-              className={styles.checkbox}
-              type="checkbox"
               onChange={() => checkboxCheckedChange(todo)}
-              checked={todo.isDone}
-              disabled
+              disabled={isEdit}
             />
-            <input
-              placeholder="Edit Your Todo Name..."
-              onChange={(e) => setEditValue(e.target.value)}
-              type="text"
-              className={styles.title}
-              value={editValue}
-            />
-            <button className={styles.input} onClick={handleOkEditButton}>
-              Ok
-            </button>
-            <button className={styles.input} onClick={handleCancelButton}>
-              Cancel
-            </button>
-          </>
-        )}
-        <div className={styles.todoButtons}></div>
-      </div>
-    </li>
-  );
-};
+          }
+          title={
+            isEdit ? (
+              <Input
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+              />
+            ) : (
+              todo.title
+            )
+          }
+        />
+      </List.Item>
+    );
+  }
+
 
 export default TodoListItem;
