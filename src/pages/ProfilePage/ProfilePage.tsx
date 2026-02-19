@@ -49,12 +49,6 @@ const ProfilePage = () => {
           <Descriptions.Item label="Email">
             {profileData?.email}
           </Descriptions.Item>
-          <Descriptions.Item label="Дата регистрации">
-            {profileData?.date}
-          </Descriptions.Item>
-          <Descriptions.Item label="Роль">
-            {profileData?.roles}
-          </Descriptions.Item>
           <Descriptions.Item label="Номер телефона">
             {profileData?.phoneNumber || "Не указан"}
           </Descriptions.Item>
