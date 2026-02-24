@@ -1,4 +1,5 @@
-import type { RefreshToken } from "../../api/types";
+import type { RefreshToken } from "../../api/token/types"
+
 
 export const isRefreshToken = (data: unknown): data is RefreshToken => {
   const obj = data as Record<string, unknown>

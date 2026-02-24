@@ -1,6 +1,7 @@
 import axios from "axios"
 import { api } from "../axiosInstance"
-import type { AuthData, Profile, Token, UserRegistration } from "../types"
+import type { AuthData, Profile, UserRegistration } from "./types"
+import type { Token } from "../token/types"
 
 export async function registerUser(userRegisterData: UserRegistration): Promise<Profile> {
   try {
