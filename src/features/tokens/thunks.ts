@@ -1,8 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type {AccessToken } from "../../api/types"
-import { refreshTokenApi } from "../../api";
-import { store } from "../../services/store";
-import { setAccessToken } from "./slice";
+import type { AccessToken } from "../../api/token/types";
+import { refreshTokenApi } from "../../api/token/request";
+import { tokenManager } from "./tokenManages";
 
 
 export const refreshTokenThunk = createAsyncThunk<
@@ -11,13 +10,13 @@ AccessToken,
  { rejectValue: string}>
  ('@@tokens/refreshTokens', async ( _, { rejectWithValue }) => {
    try {
-    const oldRefreshToken = localStorage.getItem('refreshToken')
+    const oldRefreshToken = tokenManager.getRefreshToken()
     if(!oldRefreshToken) return rejectWithValue('Нет refresh токена')
 
     if(oldRefreshToken) {
       const {accessToken, refreshToken}  = await refreshTokenApi({refreshToken: oldRefreshToken}) 
       
-      localStorage.setItem("refreshToken", refreshToken);
+      tokenManager.setRefreshToken(refreshToken)
       return {
         accessToken
       }
@@ -27,8 +26,7 @@ AccessToken,
       }
    } 
    catch (error) {
-      store.dispatch(setAccessToken(null))
-      localStorage.removeItem("refreshToken");
+      tokenManager.clearTokens()
       if (typeof error === 'string') {
         return rejectWithValue(error);
     }

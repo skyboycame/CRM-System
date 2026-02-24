@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { AuthData, Profile, Token, UserRegistration } from "../../api/types";
-import { loginUser, logoutUser, registerUser } from "../../api";
-import { store } from "../../services/store";
-import { setAccessToken } from "../tokens/slice";
+import type { AuthData, Profile, UserRegistration } from "../../api/user/types";
+import type { Token } from "../../api/token/types";
+import { loginUser, logoutUser, registerUser } from "../../api/user/request";
+import { tokenManager } from "../tokens/tokenManages";
 
 export const registerUserThunk = createAsyncThunk<
   Profile,
@@ -30,8 +30,8 @@ AuthData,
 >('@@user/login', async (loginData , {rejectWithValue}) => {
   try {
     const response = await loginUser(loginData);
-    store.dispatch(setAccessToken(response.accessToken))
-    localStorage.setItem('refreshToken', response.refreshToken);
+    tokenManager.setAccessToken(response.accessToken)
+    tokenManager.setRefreshToken(response.refreshToken);
     return response
   } catch (error) {
        if (typeof error === 'string') {
@@ -52,8 +52,7 @@ export const logoutUserThunk = createAsyncThunk(
       console.error(e)
     }
     finally {
-      store.dispatch(setAccessToken(null))
-      localStorage.removeItem('refreshToken');
+      tokenManager.clearTokens()
     }
   }
 )

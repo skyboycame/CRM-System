@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { Profile, StatusType,  } from "../../api/types";
+import type { StatusType  } from "../../api/types";
 import { loginUserThunk, logoutUserThunk, registerUserThunk } from "./thunks";
 import { refreshTokenThunk } from "../tokens/thunks";
+import type { Profile } from "../../api/user/types";
 
 interface UserState {
   profileData: Profile | null,

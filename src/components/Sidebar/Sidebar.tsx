@@ -31,13 +31,13 @@ const Sidebar = () => {
     },
   ]
   return (
-    isAuth &&
+    !location.pathname.includes('/login') && isAuth ?
     <Sider>
         <Menu
         selectedKeys={[selectedKeys]}
         items={menuItems}
        />
-    </Sider>
+    </Sider> : null
   );
 };
 

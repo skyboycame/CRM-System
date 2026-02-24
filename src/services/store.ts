@@ -1,13 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, type TypedUseSelectorHook } from "react-redux";
 import { userReducer } from "../features/user/userSlice";
-import { tokenReducer } from "../features/tokens/slice";
 import { profileReducer } from "../features/profile/slice";
 
 
 const rootReducer = combineReducers({
   user: userReducer,
-  token: tokenReducer,
   profile: profileReducer
 })
 

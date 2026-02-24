@@ -1,9 +1,10 @@
 import axios from "axios";
 import { store } from "../services/store";
 import { setIsAuth } from "../features/user/userSlice";
-import { setAccessToken } from "../features/tokens/slice";
-import { refreshTokenApi } from ".";
+
 import type { FailedRequst } from "./types";
+import { refreshTokenApi } from "./token/request";
+import { tokenManager } from "../features/tokens/tokenManages";
 
 export const BASE_URL = "https://easydev.club/api/v1";
 
@@ -16,7 +17,8 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const accessToken = store.getState().token.accessToken;
+
+    const accessToken = tokenManager.getAccessToken()
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -48,6 +50,10 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    if (originalRequest.url === "/auth/refresh") {
+      return Promise.reject(error);
+    }
+
     if (isRefreshing) {
       return new Promise<string | null>((resolve, reject) => {
         failedQueue.push({ resolve, reject });
@@ -57,7 +63,6 @@ api.interceptors.response.use(
           return api(originalRequest);
         })
         .catch((err) => {
-          console.log("Refreshing error:", err);
           return Promise.reject(err);
         });
     }
@@ -66,15 +71,14 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const refreshToken = localStorage.getItem("refreshToken");
+      const refreshToken = tokenManager.getRefreshToken()
       if (!refreshToken) throw new Error("No refresh token");
       const { accessToken, refreshToken: newRefresh } = await refreshTokenApi({
         refreshToken,
       });
-
-      store.dispatch(setAccessToken(accessToken));
+      tokenManager.setAccessToken(accessToken)
       if (newRefresh) {
-        localStorage.setItem("refreshToken", newRefresh);
+        tokenManager.setRefreshToken(newRefresh)
       }
 
       originalRequest.headers.Authorization = `Bearer ${accessToken}`;
@@ -82,8 +86,7 @@ api.interceptors.response.use(
       return api(originalRequest);
     } catch (err) {
       processQueue(err, null);
-      localStorage.removeItem("refreshToken");
-      store.dispatch(setAccessToken(null));
+      tokenManager.clearTokens()
       store.dispatch(setIsAuth(false));
       return Promise.reject(err);
     } finally {

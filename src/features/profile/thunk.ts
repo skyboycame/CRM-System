@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { Profile } from "../../api/types";
-import { getProfileData } from "../../api";
 import type { RootState } from "../../services/store";
+import type { Profile } from "../../api/user/types";
+import { getProfileData } from "../../api/user/request";
 
 export const getProfileDataThunk = createAsyncThunk<
   Profile,

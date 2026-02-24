@@ -3,9 +3,9 @@ import type { Todo, TodoInfo } from "../../types/types";
 import TodoList from "../../components/TodoList/TodoList";
 import CreateTodo from "../../components/CreateTodo/CreateTodo";
 import { TodoInfoFilterEnum } from "../../types/types";
-import { createNewTodo, deleteTodo, getTodos, updateTodo } from "../../api";
 import FilterButtons from "../../components/FilterButtons/FilterButtons";
 import { notifyError } from "../../utils/notify/notify";
+import { createNewTodo, deleteTodo, getTodos, updateTodo } from "../../api/todos/request";
 
 const TodosPage = () => {
   const [todos, setTodos] = useState<Todo[]>([]);

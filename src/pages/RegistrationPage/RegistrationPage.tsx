@@ -9,20 +9,18 @@ import {
   Result,
   Row,
   Spin,
-  Typography,
 } from "antd";
 import {
-  emailRegex,
+  EMAIL_REGEX,
   MAX_LOGIN_LENGTH,
   MAX_PASSWORD_LENGTH,
   MAX_USERNAME_LENGTH,
   MIN_LOGIN_LENGTH,
   MIN_PASSWORD_LENGTH,
   MIN_USERNAME_LENGTH,
-  phoneRegex,
+  PHONE_REGEX,
   usernameRegex,
-} from "../../utils/validation/validateRegister";
-import type { UserRegistration } from "../../api/types";
+} from "../../utils/validation/constantRegister";
 import { useAppDispatch, useAppSelector } from "../../services/store";
 import { registerUserThunk } from "../../features/user/thunks";
 import {
@@ -31,6 +29,7 @@ import {
   selectRegisterStatus,
 } from "../../features/user/selectors";
 import { Link, Navigate, useNavigate } from "react-router";
+import type { UserRegistration } from "../../api/user/types";
 
 type FieldType = UserRegistration & {
   repeatPassword: string;
@@ -45,7 +44,6 @@ const RegistrationPage: React.FC = () => {
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { repeatPassword, ...registerData } = values;
-    console.log("Success:", registerData);
     dispatch(registerUserThunk(registerData));
   };
 
@@ -53,11 +51,6 @@ const RegistrationPage: React.FC = () => {
     navigate("/login");
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo,
-  ) => {
-    console.log("Failed:", errorInfo);
-  };
 
   if (isAuthenticated) {
     return <Navigate to="/"></Navigate>;
@@ -78,12 +71,10 @@ const RegistrationPage: React.FC = () => {
         />
       ) : (
         <>
-          <Col span={12}>
-            <Typography.Title level={2} style={{ textAlign: "center" }}>
-              Регистрация
-            </Typography.Title>
+          <Col span={13}>
+           <img style={{ maxWidth: "100%", height: "auto" }} src="/illustration.png" />
           </Col>
-          <Col span={12}>
+          <Col span={11}>
             <Form
               name="basic"
               labelCol={{ span: 12 }}
@@ -91,7 +82,6 @@ const RegistrationPage: React.FC = () => {
               style={{ maxWidth: 600 }}
               initialValues={{ remember: true }}
               onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
               autoComplete="off"
             >
               <Form.Item<FieldType>
@@ -179,7 +169,7 @@ const RegistrationPage: React.FC = () => {
                 rules={[
                   { required: true, message: "Пожалуйста, введите email" },
                   {
-                    pattern: emailRegex,
+                    pattern: EMAIL_REGEX,
                     message: "Email должен быть вида: xxx@xxx.xx",
                   },
                 ]}
@@ -192,7 +182,7 @@ const RegistrationPage: React.FC = () => {
                 name="phoneNumber"
                 rules={[
                   {
-                    pattern: phoneRegex,
+                    pattern: PHONE_REGEX,
                     message: "Номер Телефона должен быть вида: +79999999999",
                   },
                 ]}
