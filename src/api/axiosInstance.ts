@@ -1,10 +1,10 @@
 import axios from "axios";
-import { store } from "../services/store";
+import { store } from "../store/store";
 import { setIsAuth } from "../features/user/userSlice";
 
-import type { FailedRequst } from "./types";
 import { refreshTokenApi } from "./token/request";
 import { tokenManager } from "../features/tokens/tokenManages";
+import type { FailedRequst } from "../types/api/types";
 
 export const BASE_URL = "https://easydev.club/api/v1";
 
@@ -17,8 +17,7 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-
-    const accessToken = tokenManager.getAccessToken()
+    const accessToken = tokenManager.getAccessToken();
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -44,13 +43,14 @@ const processQueue = (error: unknown = null, token: string | null = null) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log("Response error:", error.response?.status, error.config.url);
     const originalRequest = error.config;
 
     if (error.response?.status !== 401 || originalRequest._retry) {
       return Promise.reject(error);
     }
 
-    if (originalRequest.url === "/auth/refresh") {
+    if (originalRequest.url?.includes("/auth/refresh")) {
       return Promise.reject(error);
     }
 
@@ -71,14 +71,14 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const refreshToken = tokenManager.getRefreshToken()
+      const refreshToken = tokenManager.getRefreshToken();
       if (!refreshToken) throw new Error("No refresh token");
       const { accessToken, refreshToken: newRefresh } = await refreshTokenApi({
         refreshToken,
       });
-      tokenManager.setAccessToken(accessToken)
+      tokenManager.setAccessToken(accessToken);
       if (newRefresh) {
-        tokenManager.setRefreshToken(newRefresh)
+        tokenManager.setRefreshToken(newRefresh);
       }
 
       originalRequest.headers.Authorization = `Bearer ${accessToken}`;
@@ -86,7 +86,7 @@ api.interceptors.response.use(
       return api(originalRequest);
     } catch (err) {
       processQueue(err, null);
-      tokenManager.clearTokens()
+      tokenManager.clearTokens();
       store.dispatch(setIsAuth(false));
       return Promise.reject(err);
     } finally {

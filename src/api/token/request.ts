@@ -1,9 +1,6 @@
 import axios from "axios";
 import { api } from "../axiosInstance";
-import type { RefreshToken, Token } from "./types";
-import { tokenManager } from "../../features/tokens/tokenManages";
-import { store } from "../../services/store";
-import { setIsAuth, setIsAuthChecked } from "../../features/user/userSlice";
+import type { RefreshToken, Token } from "../../types/token/types";
 
 export async function refreshTokenApi(
   refreshToken: RefreshToken,
@@ -18,16 +15,4 @@ export async function refreshTokenApi(
     }
     throw e;
   }
-}
-
-export async function checkAuth() {
-
-  const refreshToken = tokenManager.getRefreshToken();
-  if (!refreshToken) {
-    store.dispatch(setIsAuth(false));
-    store.dispatch(setIsAuthChecked(true));
-    return;
-  }
-    store.dispatch(setIsAuth(true));
-    store.dispatch(setIsAuthChecked(true));
 }

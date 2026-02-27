@@ -7,12 +7,18 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import NotAuthLayout from "./components/NotAuthLayout/NotAuthLayout";
-
+import { useEffect } from "react";
+import { useAppDispatch } from "./store/store";
+import { checkAuthThunk } from "./features/user/thunks";
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(checkAuthThunk());
+  }, [dispatch]);
 
   return (
     <Routes>
-      <Route element={<NotAuthLayout/>}>
+      <Route element={<NotAuthLayout />}>
         <Route path="/register" element={<RegistrationPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
       </Route>

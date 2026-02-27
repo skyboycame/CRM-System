@@ -1,4 +1,4 @@
-import type { RootState } from "../../services/store";
+import type { RootState } from "../../store/store";
 
 export const selectGetProfileData = (state: RootState) => state.profile.profileData
 export const selectGetProfileError = (state: RootState) => state.profile.profileError

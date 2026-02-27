@@ -2,7 +2,7 @@ import { Layout, Menu, type MenuProps } from "antd";
 import { NavLink, useLocation } from "react-router";
 import { UserOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import { useMemo } from "react";
-import { useAppSelector } from "../../services/store";
+import { useAppSelector } from "../../store/store";
 import { selectIsAuthenticated } from "../../features/user/selectors";
 
 const { Sider } = Layout;

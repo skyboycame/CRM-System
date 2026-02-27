@@ -1,4 +1,4 @@
-import type { RootState } from "../../services/store";
+import type { RootState } from "../../store/store";
 
 export const selectProfileData = (state: RootState) => state.user.profileData
 export const selectIsAuthChecked = (state: RootState) => state.user.isAuthChecked

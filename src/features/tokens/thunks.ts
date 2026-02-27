@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { AccessToken } from "../../api/token/types";
+import type { AccessToken } from "../../types/token/types";
 import { refreshTokenApi } from "../../api/token/request";
 import { tokenManager } from "./tokenManages";
 

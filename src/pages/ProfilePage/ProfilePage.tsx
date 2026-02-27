@@ -1,5 +1,5 @@
 import { Alert, Button, Card, Descriptions, Spin } from "antd";
-import { useAppDispatch, useAppSelector } from "../../services/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { getProfileDataThunk } from "../../features/profile/thunk";
 import { useEffect } from "react";
 import {
@@ -22,10 +22,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (profileStatus !== "idle") return;
-    if (profileStatus === "idle") {
+    if (!profileData) {
       dispatch(getProfileDataThunk());
     }
-  }, [dispatch, profileStatus]);
+  }, [dispatch, profileStatus, profileData]);
   if (profileError) {
     return (
       <Alert

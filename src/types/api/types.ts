@@ -1,4 +1,5 @@
-import type { TodoInfoFilterEnum } from "../types/types";
+import type { TodoInfoFilterEnum } from "../todos/types";
+
 
 export interface GetParams {
   filter?: TodoInfoFilterEnum;

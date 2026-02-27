@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { StatusType } from "../../api/types";
 import { getProfileDataThunk } from "./thunk";
-import type { Profile } from "../../api/user/types";
+import type { Profile } from "../../types/user/types";
+import type { StatusType } from "../../types/api/types";
 
 interface initStateType {
   profileStatus: StatusType,
