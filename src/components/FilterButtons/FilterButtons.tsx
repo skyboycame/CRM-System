@@ -1,9 +1,9 @@
 import { Button, Flex } from "antd";
-import { TodoInfoFilterEnum, type TodoInfo } from "../../types/types";
 import styles from './FilterButtons.module.css'
+import { TodoInfoFilterEnum, type TodoInfo,  } from "../../types/todos/types";
 
 interface Props {
-  getTodoByFilter: (filter: TodoInfoFilterEnum) => void;
+  getTodoByFilter: (filter: TodoInfoFilterEnum ) => void;
   todoFilter: TodoInfoFilterEnum;
   info: TodoInfo;
 }

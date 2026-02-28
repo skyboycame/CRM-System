@@ -1,7 +1,7 @@
 import { List } from "antd";
-import type { Todo } from "../../types/types";
 import TodoListItem from "../TodoListItem/TodoListItem";
 import styles from './TodoList.module.css'
+import type { Todo } from "../../types/todos/types";
 
 interface Props {
   todos: Todo[];

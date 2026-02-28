@@ -1,11 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import type { Todo, TodoInfo } from "../../types/types";
 import TodoList from "../../components/TodoList/TodoList";
 import CreateTodo from "../../components/CreateTodo/CreateTodo";
-import { TodoInfoFilterEnum } from "../../types/types";
-import { createNewTodo, deleteTodo, getTodos, updateTodo } from "../../api";
 import FilterButtons from "../../components/FilterButtons/FilterButtons";
 import { notifyError } from "../../utils/notify/notify";
+import { createNewTodo, deleteTodo, getTodos, updateTodo } from "../../api/todos/request";
+import { TodoInfoFilterEnum, type Todo, type TodoInfo } from "../../types/todos/types";
 
 const TodosPage = () => {
   const [todos, setTodos] = useState<Todo[]>([]);

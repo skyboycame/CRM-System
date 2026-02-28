@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { Todo } from "../../types/types";
 import { validateTitle } from "../../utils/validation/validateTitle";
 import { Button, Checkbox, Input, List } from "antd";
+import type { Todo } from "../../types/todos/types";
 
 interface Props {
   todo: Todo;

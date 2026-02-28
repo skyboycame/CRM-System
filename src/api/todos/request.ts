@@ -1,6 +1,5 @@
-import type { TodoRequest, Todo, TodoInfo } from "../types/types";
-import { TodoInfoFilterEnum, type MetaResponse } from "../types/types";
-import { api } from "./axiosInstance";
+import { TodoInfoFilterEnum, type MetaResponse, type Todo, type TodoInfo, type TodoRequest } from "../../types/todos/types";
+import { api } from "../axiosInstance";
 
 export async function createNewTodo(newTodo: TodoRequest): Promise<Todo> {
   const response = await api.post<Todo>(`todos`, newTodo);
