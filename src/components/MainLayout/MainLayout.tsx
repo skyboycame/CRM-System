@@ -1,10 +1,13 @@
 import { Layout } from "antd";
 import Sidebar from "../Sidebar/Sidebar";
 import { Outlet } from "react-router";
-import { memo } from "react";
+import { memo} from "react";
+
 
 const MainLayout = memo(() => {
   const { Content } = Layout;
+
+
 
   return (
     <Layout>
